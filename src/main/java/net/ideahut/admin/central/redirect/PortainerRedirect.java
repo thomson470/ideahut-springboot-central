@@ -97,7 +97,7 @@ public class PortainerRedirect extends RedirectBase {
 		}
 		Forward forward = new Forward();
 		forward.setAction(url);
-		forward.setMethod("post");
+		forward.setMethod("get");
 		forward.setParameter("access_token", URLEncoder.encode(jwt, StandardCharsets.UTF_8));
 		return forward;
 	}
