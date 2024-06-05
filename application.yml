@@ -23,8 +23,8 @@ spring:
          auto-commit: "true"
       driver-class-name: "com.mysql.cj.jdbc.Driver"
       jdbc-url: "jdbc:mysql://localhost:3306/admin_central?createDatabaseIfNotExist=true&autoReconnect=true"
-      username: "root"
-      password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
+      username: "<username>"
+      password: "<password>"
    jpa:
       open-in-view: false
       properties:
@@ -70,7 +70,7 @@ app:
       standalone:
          host: 127.0.0.1
          port: 6379
-         password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
+         password: "<password>"
          database: 0
          
    resource:
