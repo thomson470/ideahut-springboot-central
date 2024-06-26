@@ -2,6 +2,8 @@ package net.ideahut.admin.central.service;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,73 +22,97 @@ import net.ideahut.admin.central.object.View;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.entity.SessionCallable;
 import net.ideahut.springboot.entity.TrxManagerInfo;
+import net.ideahut.springboot.task.TaskHandler;
+import net.ideahut.springboot.util.FrameworkUtil;
 
 @Service
 public class AccountServiceImpl implements AccountService {
 	
 	@Autowired
 	private EntityTrxManager entityTrxManager;
+	@Autowired
+	private TaskHandler taskHandler;
 
 	@Override
 	public Account getAccountByUsername(String username) {
 		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
-		return trxManagerInfo.transaction(new SessionCallable<Account>() {
+		Future<Account> ftAccount = taskHandler.submit(new Callable<Account>() {
 			@Override
-			public Account call(Session session) throws Exception {
-				Account account = session.createQuery(
-					"from Account " +
-					"where username=?1 ",
-					Account.class
-				)
-				.setParameter(1, username)
-				.uniqueResult();
-				trxManagerInfo.loadLazy(account, Account.class);
-				if (account != null) {
-					List<AccountView> items = trxManagerInfo.transaction(new SessionCallable<List<AccountView>>() {
-						@Override
-						public List<AccountView> call(Session session) throws Exception {
-							List<AccountView> list = session.createQuery(
-								"from AccountView where id.accountId=?1",
-								AccountView.class
-							)
-							.setParameter(1, account.getAccountId())
-							.getResultList();
-							trxManagerInfo.loadLazy(list, AccountView.class);
-							return list;
-						}
-					});
-					account.setViewsByClass(new LinkedHashMap<>());
-					account.setViewsByName(new LinkedHashMap<>());
-					while (!items.isEmpty()) {
-						AccountView crud = items.remove(0);
-						trxManagerInfo.nullAudit(crud);
-						View view = View.of(crud.getId().getViewName());
-						if (view != null) {
-							account.getViewsByClass().put(view.getType(), crud);
-							account.getViewsByName().put(view.name(), crud);
-						}
+			public Account call() throws Exception {
+				return trxManagerInfo.transaction(new SessionCallable<Account>() {
+					@Override
+					public Account call(Session session) throws Exception {
+						Account account = session.createQuery(
+							"from Account " +
+							"where username = ?1 ",
+							Account.class
+						)
+						.setParameter(1, username)
+						.uniqueResult();
+						trxManagerInfo.loadLazy(account, Account.class);
+						return account;
 					}
-					AccountView crudAccount = account.getViewsByClass().get(Account.class);
-					if (crudAccount != null) {
-						account.getViewsByClass().put(AccountView.class, crudAccount);
-						account.getViewsByClass().put(AccountModule.class, crudAccount);
-					}
-					AccountView crudRedirect = account.getViewsByClass().get(Redirect.class);
-					if (crudRedirect != null) {
-						account.getViewsByClass().put(RedirectParameter.class, crudRedirect);
-					}
-					AccountView crudModule = account.getViewsByClass().get(Module.class);
-					if (crudModule != null) {
-						account.getViewsByClass().put(ModuleConfiguration.class, crudModule);
-					}
-					AccountView crudProject = account.getViewsByClass().get(Project.class);
-					if (crudProject != null) {
-						account.getViewsByClass().put(ProjectModule.class, crudProject);
-					}
-				}
-				return account;
+				});
 			}
 		});
+		Future<List<AccountView>> ftViews = taskHandler.submit(new Callable<List<AccountView>>() {
+			@Override
+			public List<AccountView> call() throws Exception {
+				return trxManagerInfo.transaction(new SessionCallable<List<AccountView>>() {
+					@Override
+					public List<AccountView> call(Session session) throws Exception {
+						List<AccountView> views = session.createQuery(
+							"from AccountView where account.username = ?1",
+							AccountView.class
+						)
+						.setParameter(1, username)
+						.getResultList();
+						trxManagerInfo.loadLazy(views, AccountView.class);
+						return views;
+					}
+					
+				});
+			}
+		});
+		
+		Account account = null;
+		try {
+			account = ftAccount.get();
+			List<AccountView> views = ftViews.get();
+			if (account != null) {
+				account.setViewsByClass(new LinkedHashMap<>());
+				account.setViewsByName(new LinkedHashMap<>());
+				while (!views.isEmpty()) {
+					AccountView acv = views.remove(0);
+					trxManagerInfo.nullAudit(acv);
+					View view = View.of(acv.getId().getViewName());
+					if (view != null) {
+						account.getViewsByClass().put(view.getType(), acv);
+						account.getViewsByName().put(view.name(), acv);
+					}
+				}
+				AccountView crudAccount = account.getViewsByClass().get(Account.class);
+				if (crudAccount != null) {
+					account.getViewsByClass().put(AccountView.class, crudAccount);
+					account.getViewsByClass().put(AccountModule.class, crudAccount);
+				}
+				AccountView crudRedirect = account.getViewsByClass().get(Redirect.class);
+				if (crudRedirect != null) {
+					account.getViewsByClass().put(RedirectParameter.class, crudRedirect);
+				}
+				AccountView crudModule = account.getViewsByClass().get(Module.class);
+				if (crudModule != null) {
+					account.getViewsByClass().put(ModuleConfiguration.class, crudModule);
+				}
+				AccountView crudProject = account.getViewsByClass().get(Project.class);
+				if (crudProject != null) {
+					account.getViewsByClass().put(ProjectModule.class, crudProject);
+				}
+			}
+		} catch (Exception e) {
+			throw FrameworkUtil.exception(e);
+		}
+		return account;
 	}
 	
 }

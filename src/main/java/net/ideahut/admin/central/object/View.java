@@ -34,7 +34,7 @@ public enum View {
 	public static View of(String name) {
 		try {
 			return View.valueOf(name.trim().toUpperCase());
-		} catch (Exception e) {}
+		} catch (Exception e) { /***/}
 		return null;
 	}
 	
