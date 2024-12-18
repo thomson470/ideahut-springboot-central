@@ -4,7 +4,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -27,19 +26,18 @@ import net.ideahut.springboot.audit.AuditHandler;
 import net.ideahut.springboot.audit.DatabaseAuditProperties;
 import net.ideahut.springboot.audit.DatabaseMultiAuditHandler;
 import net.ideahut.springboot.entity.EntityTrxManager;
+import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.task.TaskHandler;
-import net.ideahut.springboot.util.FrameworkUtil;
 
 @Configuration
 @EnableTransactionManagement
 class TrxManagerConfig {
 	
-	@Autowired
-	private Environment environment;
-
 	@Bean
 	@ConfigurationProperties(prefix = "spring.datasource")
-	protected DataSource dataSource() {
+	DataSource dataSource(
+		Environment environment		
+	) {
 		String jndi = environment.getProperty("spring.datasource.jndi-name", "").trim();
 		if (!jndi.isEmpty()) {
 			JndiDataSourceLookup lookup = new JndiDataSourceLookup();
@@ -50,7 +48,7 @@ class TrxManagerConfig {
     }
 	
 	@Bean
-	protected PersistenceManagedTypes persistenceManagedTypes(
+	PersistenceManagedTypes persistenceManagedTypes(
 		ResourceLoader resourceLoader
 	) {
 		return 
@@ -61,12 +59,13 @@ class TrxManagerConfig {
 	}
 	
 	@Bean
-	protected LocalContainerEntityManagerFactoryBean entityManagerFactory(
+	LocalContainerEntityManagerFactoryBean entityManagerFactory(
+		Environment environment,
 		EntityManagerFactoryBuilder builder,
 		PersistenceManagedTypes persistenceManagedTypes,
 		DataSource dataSource
 	) {
-		Map<String, Object> properties = FrameworkUtil.getHibernateSettings(environment, "spring.jpa.properties");
+		Map<String, Object> properties = FrameworkHelper.getHibernateSettings(environment, "spring.jpa.properties");
 		return builder
 			.dataSource(dataSource)		
 			.persistenceUnit("default")
@@ -77,14 +76,14 @@ class TrxManagerConfig {
 
 	@Primary
 	@Bean
-	protected PlatformTransactionManager transactionManager(
+	PlatformTransactionManager transactionManager(
 		EntityManagerFactory entityManagerFactory
 	) {
 		return new JpaTransactionManager(entityManagerFactory);
 	}
 	
 	@Bean
-	protected AuditHandler auditHandler(
+	AuditHandler auditHandler(
 		EntityTrxManager entityTrxManager,
 		TaskHandler taskHandler
 	) {

@@ -1,0 +1,1 @@
+import{Q as e}from"./QImg-CPhRzbPa.js";import{_ as s,aa as t,f as o,a3 as a}from"./index-3Ds9K3sY.js";const r="/ui/assets/logo-CA7NL8Dr.png",c={},n={class:"flex flex-center"};function l(f,i){return a(),t("div",n,[o(e,{class:"login-form",src:r,ratio:1,style:{"max-width":"300px"},fit:"fill"})])}const p=s(c,[["render",l]]);export{p as default};

@@ -29,10 +29,9 @@
         <start-class>net.ideahut.admin.central.Application</start-class>
 		<version.exec-maven-plugin>3.2.0</version.exec-maven-plugin>
 
-        <version.commons-io>2.15.1</version.commons-io>
+        <version.commons-io>2.17.0</version.commons-io>
         <version.jbcrypt>0.4</version.jbcrypt>
-		<version.jedis>5.0.2</version.jedis>
-		<version.apache-tika>2.9.1</version.apache-tika>
+		<version.apache-tika>2.9.2</version.apache-tika>
         
 	</properties>
 
@@ -43,11 +42,11 @@
 		<dependency>
 			<groupId>net.ideahut</groupId>
 			<artifactId>ideahut-springboot-3x</artifactId>
-			<version>2.0.0</version>
+			<version>3.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>net.ideahut</groupId>
-			<version>2.0.2</version>
+			<version>3.2.0</version>
 			<artifactId>ideahut-springboot-3.2.2</artifactId>
 		</dependency>
 
@@ -98,6 +97,10 @@
 			<artifactId>jackson-dataformat-xml</artifactId>
 		</dependency>
 		<dependency>
+		    <groupId>com.fasterxml.jackson.dataformat</groupId>
+		    <artifactId>jackson-dataformat-yaml</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
@@ -139,10 +142,10 @@
 		</dependency>
 
 
-		<!-- MYSQL -->
+		<!-- POSTGRESQL -->
 		<dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 		</dependency>
 		
 	</dependencies>
@@ -157,6 +160,20 @@
 			<plugin>
 				<groupId>org.graalvm.buildtools</groupId>
 				<artifactId>native-maven-plugin</artifactId>
+				<configuration>
+					<buildArgs>
+						<buildArg>--strict-image-heap</buildArg>
+						<buildArg>--verbose</buildArg>
+						<buildArg>-Djava.awt.headless=false</buildArg>
+						<buildArg>-H:+ReportUnsupportedElementsAtRuntime</buildArg>
+						<buildArg>--initialize-at-build-time=com.ctc.wstx.api.CommonConfig</buildArg>
+						<buildArg>--initialize-at-build-time=com.ctc.wstx.api.ReaderConfig</buildArg>
+						<buildArg>--initialize-at-build-time=com.ctc.wstx.stax.WstxInputFactory</buildArg>
+						<buildArg>--initialize-at-build-time=com.ctc.wstx.util.DefaultXmlSymbolTable</buildArg>
+						<buildArg>--initialize-at-build-time=com.ctc.wstx.util.SymbolTable</buildArg>
+						<buildArg>--initialize-at-build-time=com.ctc.wstx.util.SymbolTable$Bucket</buildArg>
+					</buildArgs>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

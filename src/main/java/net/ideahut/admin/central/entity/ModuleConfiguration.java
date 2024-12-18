@@ -1,5 +1,8 @@
 package net.ideahut.admin.central.entity;
 
+import java.sql.Types;
+
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -11,7 +14,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinColumns;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -55,8 +57,8 @@ public class ModuleConfiguration extends EntityAudit {
 	)
 	private RedirectParameter redirectParameter;
 	
-	@Lob
-	@Column(name = "value")
+	@JdbcTypeCode(Types.LONGVARCHAR)
+	@Column(name = "value_")
 	private String value;
 	
 	public ModuleConfiguration() {}

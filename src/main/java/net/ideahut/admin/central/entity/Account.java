@@ -51,6 +51,9 @@ public class Account extends EntityAudit {
 	@Column(name = "is_active", nullable = false, length = 1)
 	private Character isActive;
 	
+	@Column(name = "enable_reload", nullable = false, length = 1)
+	private Character enableReload;
+	
 	@Column(name = "enable_tool", nullable = false, length = 1)
 	private Character enableTool;
 	
@@ -59,6 +62,9 @@ public class Account extends EntityAudit {
 	
 	@Column(name = "enable_image_upload", nullable = false, length = 1)
 	private Character enableImageUpload;
+	
+	@Column(name = "enable_admin_upload", nullable = false, length = 1)
+	private Character enableAdminUpload;
 	
 	@Transient
 	private Map<String, AccountView> viewsByName;

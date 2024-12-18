@@ -11,35 +11,41 @@ import org.springframework.web.bind.annotation.RestController;
 import net.ideahut.springboot.audit.AuditAccessible;
 import net.ideahut.springboot.audit.AuditHandler;
 import net.ideahut.springboot.audit.AuditRequest;
+import net.ideahut.springboot.helper.ObjectHelper;
+import net.ideahut.springboot.helper.WebMvcHelper;
 import net.ideahut.springboot.object.Page;
-import net.ideahut.springboot.util.FrameworkUtil;
-import net.ideahut.springboot.util.WebMvcUtil;
 
 @ComponentScan
 @RestController
 @RequestMapping("/audit")
 class AuditContoller {
 	
+	private final AuditHandler auditHandler;
+	
 	@Autowired
-	private AuditHandler auditHandler;
+	AuditContoller(
+		AuditHandler auditHandler	
+	) {
+		this.auditHandler = auditHandler;
+	}
 
 	@GetMapping(value = "/info")
-	protected AuditAccessible.AuditMember info(
+	AuditAccessible.AuditMember info(
 		@RequestParam("type") String type
 	) throws Exception {
 		AuditAccessible accessible = auditHandler.getAccessibles().values().iterator().next();
-		return accessible.getMembers().get(FrameworkUtil.classOf(type));
+		return accessible.getMembers().get(ObjectHelper.classOf(type));
 	}
 	
 	@PostMapping(value = "/list")
-	protected Page auditList(
+	Page auditList(
 		@RequestParam("handler") String handler
 	) throws Exception {
-		byte[] data = WebMvcUtil.getBodyAsBytes();
+		byte[] data = WebMvcHelper.getBodyAsBytes(WebMvcHelper.getRequest());
 		AuditRequest request = auditHandler.getRequest(data);
 		String entity = request.getEntity() != null ? request.getEntity().trim() : "";
 		if (!entity.isEmpty()) {
-			request.setClassOfEntity(FrameworkUtil.classOf(entity));
+			request.setClassOfEntity(ObjectHelper.classOf(entity));
 		}
 		return auditHandler.getList(request);
 	}

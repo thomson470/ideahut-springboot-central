@@ -15,17 +15,21 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import lombok.extern.slf4j.Slf4j;
 import net.ideahut.springboot.context.RequestContext;
-import net.ideahut.springboot.exception.ResultException;
-import net.ideahut.springboot.exception.ResultRuntimeException;
+import net.ideahut.springboot.helper.ErrorHelper;
+import net.ideahut.springboot.helper.FrameworkHelper;
+import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.object.Result;
-import net.ideahut.springboot.util.ErrorUtil;
 
 @Slf4j
 @ControllerAdvice
 public class AppAdvice implements ResponseBodyAdvice<Object> {
 	
+	private final AppProperties appProperties;
+	
 	@Autowired
-	private AppProperties appProperties;
+	AppAdvice(AppProperties appProperties) {
+		this.appProperties = appProperties;
+	}
 	
 	@ExceptionHandler
     @ResponseStatus(code = HttpStatus.OK)
@@ -34,16 +38,7 @@ public class AppAdvice implements ResponseBodyAdvice<Object> {
 		if (Boolean.TRUE.equals(appProperties.getLoggingError())) {
     		log.error(AppAdvice.class.getSimpleName(), throwable);
     	}
-    	Throwable ex = ErrorUtil.getCause(throwable);
-    	Result result = null;
-    	if (ex instanceof ResultException) {
-    		result = ((ResultException)ex).getResult();
-    	} else if (ex instanceof ResultRuntimeException) {
-    		result = ((ResultRuntimeException)ex).getResult();
-    	} else {
-    		result = Result.error(ErrorUtil.getErrors(ex, true));
-    	}
-    	return result;
+		return FrameworkHelper.getErrorAsResult(throwable);
     }
 
 	@Override
@@ -60,16 +55,22 @@ public class AppAdvice implements ResponseBodyAdvice<Object> {
 		ServerHttpRequest request,
 		ServerHttpResponse response
 	) {
-		if (body instanceof byte[]) {
+		if (ObjectHelper.isInstance(byte[].class, body)) {
 			RequestContext.destroy();
-			return body;
+			try {
+				byte[] bytes = (byte[]) body;
+				response.getBody().write(bytes);
+			} catch (Exception e) {
+				throw ErrorHelper.exception(e);
+			}
+			return null;
 		}
 		Result result = null;
-		if (!(body instanceof Result)) {
-			result = Result.success(body);
-		} else {
+		if (ObjectHelper.isInstance(Result.class, body)) {
 			result = (Result) body;
 			result.updateTime();
+		} else {
+			result = Result.success(body);
 		}
 		RequestContext.destroy();
 		return result;

@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ import net.ideahut.admin.central.object.Forward;
 import net.ideahut.admin.central.object.Menu;
 import net.ideahut.admin.central.service.AccessService;
 import net.ideahut.admin.central.service.AdminService;
+import net.ideahut.admin.central.service.GridService;
 import net.ideahut.springboot.annotation.Public;
 import net.ideahut.springboot.context.RequestContext;
 import net.ideahut.springboot.crud.CrudAction;
@@ -36,39 +38,52 @@ import net.ideahut.springboot.crud.CrudHandler;
 import net.ideahut.springboot.crud.CrudPermission;
 import net.ideahut.springboot.crud.CrudRequest;
 import net.ideahut.springboot.crud.CrudResult;
+import net.ideahut.springboot.helper.ErrorHelper;
+import net.ideahut.springboot.helper.WebMvcHelper;
 import net.ideahut.springboot.init.InitRequest;
 import net.ideahut.springboot.object.MapStringObject;
 import net.ideahut.springboot.object.Page;
 import net.ideahut.springboot.object.Result;
-import net.ideahut.springboot.util.FrameworkUtil;
-import net.ideahut.springboot.util.WebMvcUtil;
 
 @ComponentScan
 @RestController
 @RequestMapping("/")
 class RootController {
 	
+	private final AppProperties appProperties;
+	private final AccessService accessService;
+	private final AdminService adminService;
+	private final GridService gridService;
+	private final CrudPermission crudPermission;
+	private final CrudHandler crudHandler;
+	
 	@Autowired
-	private AppProperties appProperties;
-	@Autowired
-	private AccessService accessService;
-	@Autowired
-	private AdminService adminService;
-	@Autowired
-	private CrudPermission crudPermission;
-	@Autowired
-	private CrudHandler crudHandler;
+	RootController(
+		AppProperties appProperties,
+		AccessService accessService,
+		AdminService adminService,
+		GridService gridService,
+		CrudPermission crudPermission,
+		CrudHandler crudHandler
+	) {
+		this.appProperties = appProperties;
+		this.accessService = accessService;
+		this.adminService = adminService;
+		this.gridService = gridService;
+		this.crudPermission = crudPermission;
+		this.crudHandler = crudHandler;
+	}
 	
 	/*
 	 * INDEX
 	 */
 	@Public
 	@GetMapping
-	protected void index() {
+	void index() {
 		try {
-			RequestContext.currentContext().getResponse().sendRedirect(appProperties.getResource().getPath() + "/index.html");
+			RequestContext.currentContext().getResponse().sendRedirect(adminService.getWebPath() + "/index.html");
 		} catch (Exception e) {
-			FrameworkUtil.exception(e);
+			throw ErrorHelper.exception(e);
 		}
     }
 	
@@ -80,7 +95,7 @@ class RootController {
 	    path = "/warmup",
 	    consumes = APPLICATION_JSON_VALUE
 	)
-    protected ResponseEntity<String> warmup(
+    ResponseEntity<String> warmup(
     	@RequestBody @Valid InitRequest initRequest
     ) {
         return ResponseEntity.ok(UUID.randomUUID().toString() + initRequest);
@@ -91,7 +106,7 @@ class RootController {
 	 */
 	@Public
 	@PostMapping(value = "/login")
-	protected Access login(
+	Access login(
 		@RequestParam("username") String username,
 		@RequestParam("password") String password
 	) {
@@ -103,7 +118,7 @@ class RootController {
 	 * LOGOUT
 	 */
 	@RequestMapping(value = "/logout", method = { RequestMethod.GET, RequestMethod.POST })
-	protected Access logout() {
+	Access logout() {
 		Access access = accessService.logout(Access.get().getAuthorization());
 		return access != null ? access.forView() : null;
 	}
@@ -113,7 +128,7 @@ class RootController {
 	 */
 	@Public
 	@GetMapping(value = "/info")
-	protected Result info() {
+	Result info() {
 		Access access = Access.get().forView();
 		MapStringObject config = new MapStringObject();
 		config.put("multimediaUrl", appProperties.getMultimedia().getUrl());
@@ -126,7 +141,7 @@ class RootController {
 	 * MENUS
 	 */
 	@GetMapping(value = "/menus")
-	protected List<Menu> menus() {
+	List<Menu> menus() {
 		return accessService.menus();
 	}
 	
@@ -134,7 +149,7 @@ class RootController {
 	 * PROJECTS
 	 */
 	@PostMapping(value = "/projects")
-	protected Page projects(
+	Page projects(
 		@ModelAttribute Page page,
 		@RequestParam(name = "search", required = false) String search,
 		@RequestParam(name = "order", required = false) String order
@@ -146,7 +161,7 @@ class RootController {
 	 * MODULES
 	 */
 	@PostMapping(value = "/modules")
-	protected Page modules(
+	Page modules(
 		@RequestParam("projectId") String projectId,
 		@ModelAttribute Page page,
 		@RequestParam(name = "search", required = false) String search,
@@ -159,10 +174,10 @@ class RootController {
 	 * GRID
 	 */
 	@GetMapping(value = "/grid")
-	protected Result grid(
+	Result grid(
 		@RequestParam("name") String name
 	) {
-		JsonNode grid = adminService.grid(name);
+		JsonNode grid = gridService.getGrid(name);
 		return Result.success(grid);
 	}
 	
@@ -170,13 +185,13 @@ class RootController {
 	 * CRUD
 	 */
 	@PostMapping(value = "/crud/{action}")
-	protected Result crud(
+	Result crud(
 		@PathVariable("action") String action
 	) throws Exception {
-		byte[] data = WebMvcUtil.getBodyAsBytes();
+		byte[] data = WebMvcHelper.getBodyAsBytes(WebMvcHelper.getRequest());
 		CrudAction caction = CrudAction.valueOf(action.toUpperCase());
 		CrudRequest crequest = crudHandler.getRequest(data);
-		FrameworkUtil.throwIf(!crudPermission.isCrudAllowed(caction, crequest), "Crud is not allowed");
+		Assert.isTrue(crudPermission.isCrudAllowed(caction, crequest), "Crud not allowed");
 		CrudResult cres = crudHandler.execute(caction, crequest);
 		Result result;
 		if (cres.getError() != null) {
@@ -194,12 +209,12 @@ class RootController {
 	 * REDIRECT
 	 */
 	@PostMapping(value = "/redirect")
-	protected Forward redirect(
+	Forward redirect(
 		@RequestParam("projectId") String projectId,
 		@RequestParam("moduleId") String moduleId
 	) {
 		Account account = Access.get().getAccount();
-		return adminService.redirect(new AccountModuleId(account.getAccountId(), projectId, moduleId));
+		return adminService.getForward(new AccountModuleId(account.getAccountId(), projectId, moduleId));
 	}
 	
 }

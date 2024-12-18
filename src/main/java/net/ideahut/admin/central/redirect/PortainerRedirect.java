@@ -15,8 +15,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import net.ideahut.admin.central.entity.Module;
 import net.ideahut.admin.central.object.Forward;
+import net.ideahut.springboot.helper.ErrorHelper;
+import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.mapper.DataMapper;
-import net.ideahut.springboot.util.FrameworkUtil;
 import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -33,12 +34,12 @@ public class PortainerRedirect extends RedirectBase {
 	@Override
 	public Forward forward(Module module) {
 		String url = module.getConfiguration(String.class, "URL", "").trim();
-		FrameworkUtil.throwIf(url.isEmpty(), "Configuration URL is required");
+		ErrorHelper.throwIf(url.isEmpty(), "Configuration URL is required");
 		String username = module.getConfiguration(String.class, "USERNAME", "").trim();
-		FrameworkUtil.throwIf(username.isEmpty(), "Configuration USERNAME is required");
+		ErrorHelper.throwIf(username.isEmpty(), "Configuration USERNAME is required");
 		String password = module.getConfiguration(String.class, "PASSWORD", "").trim();
-		FrameworkUtil.throwIf(password.isEmpty(), "Configuration PASSWORD is required");
-		password = FrameworkUtil.decryptFromBase64(password);
+		ErrorHelper.throwIf(password.isEmpty(), "Configuration PASSWORD is required");
+		password = FrameworkHelper.decryptFromBase64(password);
 		
 		DataMapper dataMapper = getApplicationContext().getBean(DataMapper.class);
 		ObjectNode jcontent = dataMapper.createObjectNode();
@@ -50,14 +51,15 @@ public class PortainerRedirect extends RedirectBase {
 		    new X509TrustManager() {
 		        @Override
 		        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+		        	/**/
 		        }
 		        @Override
 		        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+		        	/**/
 		        }
 		        @Override
 		        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
 		            return new java.security.cert.X509Certificate[0];
-		        	//return null;
 		        }
 		    }
 		};
@@ -89,7 +91,7 @@ public class PortainerRedirect extends RedirectBase {
 		    	jwt = node.get("jwt").asText();
 		    }
 		} catch (Exception e) {
-			throw FrameworkUtil.exception(e);
+			throw ErrorHelper.exception(e);
 		} finally {
 			if (response != null) {
 				response.close();

@@ -23,82 +23,117 @@ import net.ideahut.admin.central.AppProperties;
 import net.ideahut.admin.central.entity.Account;
 import net.ideahut.admin.central.object.Access;
 import net.ideahut.admin.central.service.AdminService;
+import net.ideahut.springboot.helper.ErrorHelper;
+import net.ideahut.springboot.helper.FrameworkHelper;
+import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.object.Multimedia;
 import net.ideahut.springboot.object.Option;
-import net.ideahut.springboot.util.FrameworkUtil;
+import net.ideahut.springboot.object.Result;
 
 @ComponentScan
 @RestController
 @RequestMapping("/tool")
 class ToolController implements InitializingBean {
 	
-	@Autowired
-	private AppProperties appProperties;
-	@Autowired
-	private AdminService adminService;
+	private static class Strings {
+		private static final String USER_NOT_ALLOWED = "User not allowed";
+	}
 	
-	private List<Option> iconTypes = new ArrayList<>();
+	private final AppProperties appProperties;
+	private final AdminService adminService;
+	
+	private List<Option> imageTypes = new ArrayList<>();
 	private Map<String, File> directories = new HashMap<>();
+	
+	@Autowired
+	ToolController(
+		AppProperties appProperties,
+		AdminService adminService
+	) {
+		this.appProperties = appProperties;
+		this.adminService = adminService;
+	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		iconTypes.clear();
-		iconTypes.add(new Option("project", "Project"));
-		iconTypes.add(new Option("module", "Module"));
-		for (Option iconType : iconTypes) {
-			File directory = appProperties.getMultimedia().directory(iconType.getValue());
-			directories.put(iconType.getValue(), directory);
+		imageTypes.clear();
+		imageTypes.add(new Option("project", "Project"));
+		imageTypes.add(new Option("module", "Module"));
+		for (Option imageType : imageTypes) {
+			File directory = appProperties.getMultimedia().directory(imageType.getValue());
+			directories.put(imageType.getValue(), directory);
 		}
 	}
 	
 	/*
-	 * ICON SYNC
+	 * IMAGE SYNC
 	 */
-	@PostMapping(value = "/icon/sync")
-	protected void iconSync(
+	@PostMapping(value = "/image/sync")
+	void imageSync(
 		@RequestParam("password") String password
 	) {
-		Account account = FrameworkUtil.getOrDefault(Access.get().getAccount(), new Account());
-		FrameworkUtil.throwIf(!FrameworkUtil.isTrue(account.getEnableImageUpload()), "User is not allowed");
-		FrameworkUtil.throwIf(account.getPassword() == null, "Invalid account");
-		FrameworkUtil.throwIf(!BCrypt.checkpw(password, account.getPassword()), "Invalid password");
-		adminService.iconSync();
+		Account account = ObjectHelper.useOrDefault(Access.get().getAccount(), Account::new);
+		ErrorHelper.throwIf(!FrameworkHelper.isTrue(account.getEnableImageUpload()), Strings.USER_NOT_ALLOWED);
+		ErrorHelper.throwIf(account.getPassword() == null, "Invalid account");
+		ErrorHelper.throwIf(!BCrypt.checkpw(password, account.getPassword()), "Invalid password");
+		adminService.syncImages();
 	}
 	
 	/*
-	 * ICON OPTIONS
+	 * IMAGE TYPES
 	 */
-	@GetMapping(value = "/icon/types")
-	protected List<Option> iconTypes() {
-		return iconTypes;
+	@GetMapping(value = "/image/types")
+	List<Option> imageTypes() {
+		return imageTypes;
 	}
 
 	/*
-	 * ICON UPLOAD
+	 * IMAGE UPLOAD
 	 */
-	@PostMapping("/icon/upload")
-	protected String iconUpload(
+	@PostMapping("/image/upload")
+	String imageUpload(
 		@RequestParam("type") String type,
 		@RequestParam("file") MultipartFile file
 	) throws Exception {
-		Account account = FrameworkUtil.getOrDefault(Access.get().getAccount(), new Account());
-		FrameworkUtil.throwIf(!FrameworkUtil.isTrue(account.getEnableImageUpload()), "User is not allowed");
+		Account account = ObjectHelper.useOrDefault(Access.get().getAccount(), Account::new);
+		ErrorHelper.throwIf(!FrameworkHelper.isTrue(account.getEnableImageUpload()), Strings.USER_NOT_ALLOWED);
 		File directory = directories.get(type);
-		FrameworkUtil.throwIf(directory == null, "Invalid type: " + type);
+		ErrorHelper.throwIf(directory == null, "Invalid type: " + type);
 		Multimedia multimedia = Multimedia.of(file.getBytes()).setWidth(480);
 		if (Multimedia.IMAGE != multimedia.getType()) {
-			throw FrameworkUtil.exception("Invalid image");
+			throw ErrorHelper.exception("Invalid image");
 		}
-		String icon = UUID.randomUUID().toString() + "." + multimedia.getExtention();
-		FileUtils.writeByteArrayToFile(new File(directory, icon), multimedia.getBytes());
-		return "/"+ type + "/" + icon;
+		String image = UUID.randomUUID().toString() + "." + multimedia.getExtention();
+		FileUtils.writeByteArrayToFile(new File(directory, image), multimedia.getBytes());
+		return "/"+ type + "/" + image;
+	}
+	
+	/*
+	 * ADMIN UPLOAD
+	 */
+	@PostMapping("/admin/upload")
+	Result adminUpload(
+		@RequestParam("file") MultipartFile file
+	) throws Exception {
+		Account account = ObjectHelper.useOrDefault(Access.get().getAccount(), Account::new);
+		ErrorHelper.throwIf(!FrameworkHelper.isTrue(account.getEnableAdminUpload()), Strings.USER_NOT_ALLOWED);
+		String oldVersion = adminService.getAdminVersion();
+		Integer oldSize = adminService.getAdminBytes().length;
+		adminService.saveAdmin(file.getBytes());
+		String newVersion = adminService.getAdminVersion();
+		Integer newSize = adminService.getAdminBytes().length;
+		return Result.success()
+		.setInfo("oldVersion", oldVersion)
+		.setInfo("oldSize", oldSize + "")
+		.setInfo("newVersion", newVersion)
+		.setInfo("newSize", newSize + "");
 	}
 	
 	/*
 	 * BCRYPT GENERATE
 	 */
 	@PostMapping("/bcrypt/generate")
-	protected String bcryptGenerate(
+	String bcryptGenerate(
 		@RequestParam(name = "round", required = false) Integer round,
 		@RequestParam("password") String password
 	) throws Exception {
@@ -115,7 +150,7 @@ class ToolController implements InitializingBean {
 	 * BCRYPT CHECK
 	 */
 	@PostMapping("/bcrypt/check")
-	protected Boolean bcryptCheck(
+	Boolean bcryptCheck(
 		@RequestParam("password") String password,
 		@RequestParam("hash") String hash
 	) throws Exception {
@@ -126,11 +161,11 @@ class ToolController implements InitializingBean {
 	 * PASSWORD ENCRYPT
 	 */
 	@PostMapping("/password/encrypt")
-	protected String passwordEncrypt(
+	String passwordEncrypt(
 		@RequestParam(name = "factor", required = false) Integer factor,
 		@RequestParam("password") String password
 	) throws Exception {
-		return FrameworkUtil.encryptToBase64(password, factor);
+		return FrameworkHelper.encryptToBase64(password, factor);
 	}
 	
 }

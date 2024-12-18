@@ -22,16 +22,24 @@ import net.ideahut.admin.central.object.View;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.entity.SessionCallable;
 import net.ideahut.springboot.entity.TrxManagerInfo;
+import net.ideahut.springboot.helper.ErrorHelper;
+import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.task.TaskHandler;
-import net.ideahut.springboot.util.FrameworkUtil;
 
 @Service
-public class AccountServiceImpl implements AccountService {
+class AccountServiceImpl implements AccountService {
+	
+	private final EntityTrxManager entityTrxManager;
+	private final TaskHandler taskHandler;
 	
 	@Autowired
-	private EntityTrxManager entityTrxManager;
-	@Autowired
-	private TaskHandler taskHandler;
+	AccountServiceImpl(
+		EntityTrxManager entityTrxManager,
+		TaskHandler taskHandler	
+	) {
+		this.entityTrxManager = entityTrxManager;
+		this.taskHandler = taskHandler;
+	}
 
 	@Override
 	public Account getAccountByUsername(String username) {
@@ -70,21 +78,26 @@ public class AccountServiceImpl implements AccountService {
 						trxManagerInfo.loadLazy(views, AccountView.class);
 						return views;
 					}
-					
 				});
 			}
 		});
-		
-		Account account = null;
+		return getAccount(ftAccount, ftViews);
+	}
+	
+	private Account getAccount(
+		Future<Account> ftAccount,
+		Future<List<AccountView>> ftViews
+	) {
+		Account result = null;
 		try {
-			account = ftAccount.get();
+			Account account = ftAccount.get();
 			List<AccountView> views = ftViews.get();
 			if (account != null) {
 				account.setViewsByClass(new LinkedHashMap<>());
 				account.setViewsByName(new LinkedHashMap<>());
 				while (!views.isEmpty()) {
 					AccountView acv = views.remove(0);
-					trxManagerInfo.nullAudit(acv);
+					TrxManagerInfo.nullEntityAudit(acv);
 					View view = View.of(acv.getId().getViewName());
 					if (view != null) {
 						account.getViewsByClass().put(view.getType(), acv);
@@ -92,27 +105,37 @@ public class AccountServiceImpl implements AccountService {
 					}
 				}
 				AccountView crudAccount = account.getViewsByClass().get(Account.class);
-				if (crudAccount != null) {
-					account.getViewsByClass().put(AccountView.class, crudAccount);
-					account.getViewsByClass().put(AccountModule.class, crudAccount);
-				}
+				ObjectHelper.runIf(
+					crudAccount != null, 
+					() -> {
+						account.getViewsByClass().put(AccountView.class, crudAccount);
+						account.getViewsByClass().put(AccountModule.class, crudAccount);
+					}
+				);
 				AccountView crudRedirect = account.getViewsByClass().get(Redirect.class);
-				if (crudRedirect != null) {
-					account.getViewsByClass().put(RedirectParameter.class, crudRedirect);
-				}
+				ObjectHelper.runIf(
+					crudRedirect != null, 
+					() -> account.getViewsByClass().put(RedirectParameter.class, crudRedirect)
+				);
 				AccountView crudModule = account.getViewsByClass().get(Module.class);
-				if (crudModule != null) {
-					account.getViewsByClass().put(ModuleConfiguration.class, crudModule);
-				}
+				ObjectHelper.runIf(
+					crudModule != null, 
+					() -> account.getViewsByClass().put(ModuleConfiguration.class, crudModule)
+				);
 				AccountView crudProject = account.getViewsByClass().get(Project.class);
-				if (crudProject != null) {
-					account.getViewsByClass().put(ProjectModule.class, crudProject);
-				}
+				ObjectHelper.runIf(
+					crudProject != null, 
+					() -> account.getViewsByClass().put(ProjectModule.class, crudProject)
+				);
 			}
+			result = account;
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw ErrorHelper.exception(e);
 		} catch (Exception e) {
-			throw FrameworkUtil.exception(e);
+			throw ErrorHelper.exception(e);
 		}
-		return account;
+		return result;
 	}
 	
 }

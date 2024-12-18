@@ -21,12 +21,11 @@ spring:
          idle-timeout: "5000"
          max-lifetime: "1000"
          auto-commit: "true"
-      driver-class-name: "com.mysql.cj.jdbc.Driver"
-      jdbc-url: "jdbc:mysql://localhost:3306/admin_central?createDatabaseIfNotExist=true&autoReconnect=true"
-      username: "root"
-      password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
+      driver-class-name: "<DRIVER>"
+      jdbc-url: "<URL>"
+      username: "<USERNAME>"
+      password: "<PASSWORD>"
    jpa:
-      open-in-view: false
       properties:
          hibernate:
             hbm2ddl:
@@ -35,6 +34,9 @@ spring:
             show_sql: true
             #generate_statistics: true
             audit_identifier: "admin_central"
+            jdbc:
+               lob:
+                  non_contextual_creation: true
 
 app:
    loggingError: true
@@ -52,37 +54,41 @@ app:
       - org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController
    
    expiry:
-      auth: 1800
-      module: 1800
-      token: 60
+      auth: 
+         unit: MINUTES
+         value: 30
+      module: 
+         unit: MINUTES
+         value: 30
+      token: 
+         unit: MINUTES
+         value: 60
 
    task:      
       threadNamePrefix: "TASK"
-      corePoolSize: 2
-      maxPoolSize: 8
+      corePoolSize: 8
+      maxPoolSize: 32
       waitForJobsToCompleteOnShutdown: true
       allowCoreThreadTimeOut: true
-         
+
    redis:
-      common:
-      type: 1
-      testOnStartup: true
+      type: 0
       standalone:
-         host: 127.0.0.1
-         port: 6379
-         password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
-         database: 0
+         host: "<HOST>"
+         port: "<PORT>"
+         password: "<PASSWORD>"
+         database: 0 
          
-   resource:
-      location: "{user.dir}/extras/resource/"
+   web:
+      title: "Central"
+      location: "{user.dir}/extras/web/"
       redirectParameter: "_next_"
-      path: "/ui"
+      timeout: 60
+      language: "en"
+      debug: false
       allowedPaths:
-         - "css"
-         - "fonts"
+         - "assets"
          - "icons"
-         - "img"
-         - "js"
    
    multimedia:
       #url: "http://localhost:6401/mm"
@@ -91,14 +97,14 @@ app:
       location: "{user.dir}/multimedia/"
       
    grid:
-      account: "{user.dir}/extras/account.json"
-      project: "{user.dir}/extras/project.json"
-      module: "{user.dir}/extras/module.json"
-      redirect: "{user.dir}/extras/redirect.json"
+      account: "{user.dir}/extras/grid/account.yaml"
+      project: "{user.dir}/extras/grid/project.yaml"
+      module: "{user.dir}/extras/grid/module.yaml"
+      redirect: "{user.dir}/extras/grid/redirect.yaml"
          
 logging:
    file:
-      name: "./logs/ideahut-springboot-3x-admin-central.log"
+      name: "./logs/ideahut-springboot-central.log"
    pattern:
       console: '%d %p [%X{traceId}] %F\(%M:%L\) : %msg%n'
       file: '%d %p [%X{traceId}] %F\(%M:%L\) : %msg%n'

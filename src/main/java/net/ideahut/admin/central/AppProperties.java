@@ -12,10 +12,13 @@ import org.springframework.context.annotation.Configuration;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.ideahut.springboot.entity.EntityForeignKeyParam;
+import net.ideahut.springboot.helper.ErrorHelper;
+import net.ideahut.springboot.helper.FrameworkHelper;
+import net.ideahut.springboot.helper.StringHelper;
+import net.ideahut.springboot.object.TimeValue;
 import net.ideahut.springboot.redis.RedisProperties;
 import net.ideahut.springboot.task.TaskProperties;
-import net.ideahut.springboot.util.FrameworkUtil;
-import net.ideahut.springboot.util.StringUtil;
 
 @Configuration
 @ConfigurationProperties(prefix = "app")
@@ -23,15 +26,17 @@ import net.ideahut.springboot.util.StringUtil;
 @Getter
 public class AppProperties {
 	
+	private Boolean waitAllBeanConfigured;
 	private Boolean loggingError;
 	private String adminFile;
+	private EntityForeignKeyParam foreignKey;
 	
 	private Map<String, String> cors = new HashMap<>();
 	private List<Class<?>> ignoredHandlerClasses = new ArrayList<>();
 	
 	private TaskProperties task = new TaskProperties();
-	private RedisProperties redis = new RedisProperties();
-	private Resource resource = new Resource();
+	private RedisProperties.Connection redis = new RedisProperties.Connection();
+	private Web web = new Web();
 	private Expiry expiry = new Expiry();
 	private Multimedia multimedia = new Multimedia();
 	private Grid grid = new Grid();
@@ -39,19 +44,22 @@ public class AppProperties {
 	
 	@Setter
 	@Getter
-	public static class Resource {
+	public static class Web {
+		private String title;
 		private String location;
-		private String path;
 		private String redirectParameter;
 		private Set<String> allowedPaths;
+		private Integer timeout;
+		private String language;
+		private Boolean debug;
 	}
 	
 	@Setter
 	@Getter
 	public static class Expiry {
-		private Integer auth;
-		private Integer module;
-		private Integer token;
+		private TimeValue auth;
+		private TimeValue module;
+		private TimeValue token;
 	}
 	
 	@Setter
@@ -71,11 +79,11 @@ public class AppProperties {
 		private String location;
 		
 		public File directory(String path) {
-			String root = location != null ? FrameworkUtil.replacePath(location.trim()) : "";
-			String child = path != null ? StringUtil.removeEnd(StringUtil.removeStart(path, "/"), "/") : "";
+			String root = location != null ? FrameworkHelper.replacePath(location.trim()) : "";
+			String child = path != null ? StringHelper.removeEnd(StringHelper.removeStart(path, "/"), "/") : "";
 			File dir = new File(root, child);
 			if (dir.exists() && !dir.isDirectory()) {
-				throw FrameworkUtil.exception("Multimedia path " + dir.getAbsolutePath() + " is not a directory");
+				throw ErrorHelper.exception("Multimedia path " + dir.getAbsolutePath() + " is not a directory");
 			}
 			dir.mkdirs();
 			dir.mkdir();

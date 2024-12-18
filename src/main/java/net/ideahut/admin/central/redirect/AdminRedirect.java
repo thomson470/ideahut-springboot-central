@@ -7,7 +7,7 @@ import net.ideahut.admin.central.entity.Module;
 import net.ideahut.admin.central.object.Access;
 import net.ideahut.admin.central.object.Forward;
 import net.ideahut.admin.central.service.TokenService;
-import net.ideahut.springboot.util.FrameworkUtil;
+import net.ideahut.springboot.helper.ErrorHelper;
 
 public class AdminRedirect extends RedirectBase {
 
@@ -18,8 +18,8 @@ public class AdminRedirect extends RedirectBase {
 	@Override
 	public Forward forward(Module module) {
 		String url = module.getConfiguration(String.class, "URL", "").trim();
-		FrameworkUtil.throwIf(url.isEmpty(), "Configuration URL is required");
-		FrameworkUtil.throwIf(!url.startsWith("http://") && !url.startsWith("https://"), "Invalid configuration URL");
+		ErrorHelper.throwIf(url.isEmpty(), "Configuration URL is required");
+		ErrorHelper.throwIf(!url.startsWith("http://") && !url.startsWith("https://"), "Invalid configuration URL");
 		TokenService tokenService = getApplicationContext().getBean(TokenService.class);
 		Account account = Access.get().getAccount();
 		String token = tokenService.create(account.getSecurityUser());

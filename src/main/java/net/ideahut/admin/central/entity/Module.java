@@ -24,7 +24,7 @@ import net.ideahut.springboot.annotation.Audit;
 import net.ideahut.springboot.annotation.IdPrefix;
 import net.ideahut.springboot.entity.EntityAudit;
 import net.ideahut.springboot.generator.OdtIdGenerator;
-import net.ideahut.springboot.util.StringUtil;
+import net.ideahut.springboot.helper.StringHelper;
 
 @Audit
 @Entity
@@ -78,7 +78,7 @@ public class Module extends EntityAudit {
 		if (configurations != null) {
 			String value = configurations.get(name);
 			if (value != null) {
-				return StringUtil.valueOf(type, value, defaultValue);
+				return StringHelper.valueOf(type, value, defaultValue);
 			}
 		}
 		return defaultValue;

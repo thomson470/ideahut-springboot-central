@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import net.ideahut.admin.central.service.ResourceService;
+import net.ideahut.admin.central.service.AdminService;
 import net.ideahut.admin.central.service.TokenService;
 import net.ideahut.springboot.annotation.Public;
 import net.ideahut.springboot.security.SecurityUser;
@@ -22,29 +22,34 @@ import net.ideahut.springboot.security.SecurityUser;
 @RequestMapping("/sync")
 class SyncContoller  {
 	
-	@Autowired
-	private ResourceService resourceService;
-	@Autowired
+	private AdminService adminService;
 	private TokenService tokenService;
 	
-	@GetMapping(value = "/resource")
-	protected ResponseEntity<StreamingResponseBody> admin(
+	@Autowired
+	SyncContoller(
+		AdminService adminService,
+		TokenService tokenService	
+	) {
+		this.adminService = adminService;
+		this.tokenService = tokenService;
+	}
+	
+	@GetMapping(value = "/web")
+	ResponseEntity<StreamingResponseBody> web(
 		@RequestParam(value = "version", required = false) String version	
 	) throws Exception {
-		if (resourceService.getVersion().equals(version)) {
+		if (adminService.getAdminVersion().equals(version)) {
 			return ResponseEntity.ok().build();
 		}
-		StreamingResponseBody body = response -> {
-			response.write(resourceService.getBytes());
-		};
+		StreamingResponseBody body = response -> response.write(adminService.getAdminBytes());
 		return ResponseEntity.ok()
-		.header("Admin-Version", resourceService.getVersion())
+		.header("Admin-Version", adminService.getAdminVersion())
 		.contentType(MediaType.APPLICATION_OCTET_STREAM)
 		.body(body);
 	}
 
-	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/token")
-	protected SecurityUser token(
+	@RequestMapping(value = "/token", method = { RequestMethod.GET, RequestMethod.POST })
+	SecurityUser token(
 		@RequestParam("token") String token	
 	) throws Exception {
 		return tokenService.getUser(token);

@@ -1,5 +1,6 @@
 package net.ideahut.admin.central.config;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -13,22 +14,32 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.resource.VersionResourceResolver;
 
 import net.ideahut.admin.central.AppProperties;
-import net.ideahut.admin.central.interceptor.RequestInterceptor;
+import net.ideahut.admin.central.service.AdminService;
 import net.ideahut.springboot.config.WebMvcBasicConfig;
+import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.mapper.DataMapper;
-import net.ideahut.springboot.util.FrameworkUtil;
 
 @Configuration
 @EnableWebMvc
 class WebMvcConfig extends WebMvcBasicConfig {
 	
-	@Autowired
-	private AppProperties appProperties;
-	@Autowired
-	private DataMapper dataMapper;
-	@Autowired
-	private RequestInterceptor requestInterceptor;
+	private final AppProperties appProperties;
+	private final DataMapper dataMapper;
+	private final AdminService adminService;
+	private final HandlerInterceptor handlerInterceptor;
 	
+	@Autowired
+	WebMvcConfig(
+		AppProperties appProperties,
+		DataMapper dataMapper,
+		AdminService adminService,
+		HandlerInterceptor handlerInterceptor
+	) {
+		this.appProperties = appProperties;
+		this.dataMapper = dataMapper;
+		this.adminService = adminService;
+		this.handlerInterceptor = handlerInterceptor;
+	}
 	
 	@Override
 	protected String parameterName() {
@@ -48,7 +59,7 @@ class WebMvcConfig extends WebMvcBasicConfig {
 	@Override
 	protected HandlerInterceptor[] handlerInterceptors() {
 		return new HandlerInterceptor[] {
-			requestInterceptor
+			handlerInterceptor
 		};
 	}
 
@@ -59,7 +70,7 @@ class WebMvcConfig extends WebMvcBasicConfig {
 	
 	@Override
 	protected Map<String, MediaType> mediaTypes() {
-		return null;
+		return new HashMap<>();
 	}
 
 	
@@ -68,11 +79,11 @@ class WebMvcConfig extends WebMvcBasicConfig {
 	 */
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		AppProperties.Resource resource = appProperties.getResource();
-		if (!registry.hasMappingForPattern(resource.getPath() + "/**")) {
+		AppProperties.Web web = appProperties.getWeb();
+		if (!registry.hasMappingForPattern(adminService.getWebPath() + "/**")) {
 			registry
-			.addResourceHandler(resource.getPath() + "/**")
-			.addResourceLocations("file:" + FrameworkUtil.replacePath(resource.getLocation()))
+			.addResourceHandler(adminService.getWebPath() + "/**")
+			.addResourceLocations("file:" + FrameworkHelper.replacePath(web.getLocation()))
 			.setCacheControl(CacheControl.maxAge(60, TimeUnit.DAYS))
 	        .resourceChain(false)
 	        .addResolver(new VersionResourceResolver().addContentVersionStrategy("/ui/**"));
@@ -81,7 +92,7 @@ class WebMvcConfig extends WebMvcBasicConfig {
 		if (!registry.hasMappingForPattern(multimedia.getPath() + "/**")) {
 			registry
 			.addResourceHandler(multimedia.getPath() + "/**")
-			.addResourceLocations("file:" + FrameworkUtil.replacePath(multimedia.getLocation()));
+			.addResourceLocations("file:" + FrameworkHelper.replacePath(multimedia.getLocation()));
 		}
 		super.addResourceHandlers(registry);
 	}
