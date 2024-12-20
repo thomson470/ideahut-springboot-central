@@ -39,7 +39,7 @@ class CommonConfig {
 	
 	@Bean
 	DataMapper dataMapper() {
-		return new DataMapperImpl().findAndRegisterModules();
+		return new DataMapperImpl();
 	}
 	
 	@Bean
