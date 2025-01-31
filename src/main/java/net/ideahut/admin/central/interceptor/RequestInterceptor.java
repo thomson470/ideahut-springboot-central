@@ -18,10 +18,10 @@ import net.ideahut.admin.central.AppProperties;
 import net.ideahut.admin.central.Application;
 import net.ideahut.admin.central.object.Access;
 import net.ideahut.admin.central.service.AccessService;
-import net.ideahut.admin.central.service.AdminService;
 import net.ideahut.springboot.audit.AuditInfo;
 import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.helper.ObjectHelper;
+import net.ideahut.springboot.helper.StringHelper;
 import net.ideahut.springboot.helper.WebMvcHelper;
 
 @Component
@@ -33,18 +33,20 @@ class RequestInterceptor implements HandlerInterceptor {
 	}
 	
 	private final AppProperties appProperties;
-	private final AdminService adminService;
 	private final AccessService accessService;
+	private final String webPath;
 	
 	@Autowired
 	RequestInterceptor(
 		AppProperties appProperties,
-		AdminService adminService,
 		AccessService accessService	
 	) {
 		this.appProperties = appProperties;
-		this.adminService = adminService;
 		this.accessService = accessService;
+		AppProperties.Web web = ObjectHelper.useOrDefault(appProperties.getWeb(), AppProperties.Web::new);
+		String path = ObjectHelper.useOrDefault(web.getPath(), "").trim();
+		path = StringHelper.removeEnd(path, Strings.SLASH) + Strings.SLASH;
+		this.webPath = path;
 	}
 	
 	@Override
@@ -106,7 +108,6 @@ class RequestInterceptor implements HandlerInterceptor {
 		HttpServletRequest request, 
 		HttpServletResponse response
 	) throws Exception {
-		String webPath = adminService.getWebPath() + Strings.SLASH;
 		String servletPath = request.getServletPath();
 		if (servletPath.length() < webPath.length() && !servletPath.endsWith(Strings.SLASH)) {
 			servletPath += Strings.SLASH;

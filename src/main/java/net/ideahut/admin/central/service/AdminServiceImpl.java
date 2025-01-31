@@ -53,8 +53,6 @@ class AdminServiceImpl implements AdminService, InitializingBean, BeanReload {
 	final AppProperties appProperties;
 	final DataMapper dataMapper;
 	final ApplicationContext applicationContext;
-	String webPath;
-	
 	
 	private final SingletonHandler singletonHandler;
 	private final EntityTrxManager entityTrxManager;
@@ -103,11 +101,6 @@ class AdminServiceImpl implements AdminService, InitializingBean, BeanReload {
 			adminVersion = attr.lastModifiedTime().toMillis() + "";
 		}
 		return true;
-	}
-	
-	@Override
-	public String getWebPath() {
-		return webPath;
 	}
 	
 	
@@ -234,8 +227,8 @@ class AdminServiceImpl implements AdminService, InitializingBean, BeanReload {
 	 * MODULE
 	 */
 	private void updateModule(Module module, ProjectModule projectModule, Character isActive) {
-		if (FrameworkHelper.isTrue(module.getIsActive())) {
-			if (FrameworkHelper.isTrue(projectModule.getIsActive())) {
+		if (ObjectHelper.isTrue(module.getIsActive())) {
+			if (ObjectHelper.isTrue(projectModule.getIsActive())) {
 				module.setIsActive(isActive);
 			} else {
 				module.setIsActive(projectModule.getIsActive());
@@ -401,8 +394,8 @@ class AdminServiceImpl implements AdminService, InitializingBean, BeanReload {
 	public Forward getForward(AccountModuleId id) {
 		Module module = getModule(id);
 		ErrorHelper.throwIf(module == null, "Module is not found");
-		ErrorHelper.throwIf(!FrameworkHelper.isTrue(module.getIsActive()), "Module is not active");
-		ErrorHelper.throwIf(!FrameworkHelper.isTrue(module.getProject().getIsActive()), "Project is not active");
+		ErrorHelper.throwIf(!ObjectHelper.isTrue(module.getIsActive()), "Module is not active");
+		ErrorHelper.throwIf(!ObjectHelper.isTrue(module.getProject().getIsActive()), "Project is not active");
 		Redirect redirect = module.getRedirect();
 		RedirectBase processor = singletonHandler.getSingleton(
 			"REDIRECT-" + redirect.getClassname(), 

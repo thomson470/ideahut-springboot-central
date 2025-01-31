@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import net.ideahut.admin.central.AppProperties;
 import net.ideahut.admin.central.entity.Module;
-import net.ideahut.springboot.crud.CrudAction;
 import net.ideahut.springboot.crud.CrudBuilder;
 import net.ideahut.springboot.crud.CrudHandler;
 import net.ideahut.springboot.crud.CrudResult;
@@ -71,9 +70,9 @@ class ModuleController implements InitializingBean {
 			module.setIcon("/" + PATH + "/" + UUID.randomUUID().toString() + "." + multimedia.getExtention());
 		}
 		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
-		CrudBuilder builder = CrudBuilder.of(trxManagerInfo, Module.class)
+		CrudBuilder builder = CrudBuilder.of(crudHandler, trxManagerInfo, Module.class)
 		.setValue(module);
-		CrudResult result = builder.execute(crudHandler, CrudAction.CREATE);
+		CrudResult result = builder.create();
 		if (result.getError() != null) {
 			throw ResultRuntimeException.of(Result.error(result.getError()));
 		}
@@ -92,8 +91,8 @@ class ModuleController implements InitializingBean {
 		Multimedia multimedia = getMultimedia(file);
 		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 		EntityInfo entityInfo = trxManagerInfo.getEntityInfo(Module.class);
-		Module module = CrudBuilder.of(entityInfo)
-		.setId(input.getModuleId()).execute(crudHandler, CrudAction.UNIQUE).getValue();
+		Module module = CrudBuilder.of(crudHandler, entityInfo)
+		.setId(input.getModuleId()).unique();
 		Assert.notNull(module, "Module not found");
 		String oldIcon = null;
 		String newIcon = null;
@@ -105,10 +104,10 @@ class ModuleController implements InitializingBean {
 			if (newIcon != null) {
 				module.setIcon(newIcon);
 			}
-			CrudBuilder builder = CrudBuilder.of(trxManagerInfo, Module.class)
+			CrudBuilder builder = CrudBuilder.of(crudHandler, trxManagerInfo, Module.class)
 			.setId(input.getModuleId())
 			.setValue(module);
-			CrudResult result = builder.execute(crudHandler, CrudAction.UPDATE);
+			CrudResult result = builder.update();
 			if (result.getError() != null) {
 				throw ResultRuntimeException.of(Result.error(result.getError()));
 			}
@@ -128,8 +127,8 @@ class ModuleController implements InitializingBean {
 		@RequestParam("moduleId") String moduleId
 	) throws Exception {
 		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
-		Module module = CrudBuilder.of(trxManagerInfo, Module.class)
-		.setId(moduleId).execute(crudHandler, CrudAction.DELETE).getValue();
+		Module module = CrudBuilder.of(crudHandler, trxManagerInfo, Module.class)
+		.setId(moduleId).delete();
 		if (module != null && module.getIcon() != null) {
 			FileUtils.deleteQuietly(new File(directory, module.getIcon().substring(PATH.length() + 1)));
 		}

@@ -167,7 +167,7 @@ class GridServiceImpl implements GridService, InitializingBean, BeanReload {
 				if (view != null) {
 					ArrayNode actions = grid.putArray("actions");
 					ObjectHelper.runIf(
-						FrameworkHelper.isTrue(view.getEnableRetrieve()), 
+						ObjectHelper.isTrue(view.getEnableRetrieve()), 
 						() -> {
 							actions.add(CrudAction.LIST.name());
 							actions.add(CrudAction.MAP.name());
@@ -177,15 +177,15 @@ class GridServiceImpl implements GridService, InitializingBean, BeanReload {
 						}
 					);
 					ObjectHelper.runIf(
-						FrameworkHelper.isTrue(view.getEnableCreate()), 
+						ObjectHelper.isTrue(view.getEnableCreate()), 
 						() -> actions.add(CrudAction.CREATE.name())
 					);
 					ObjectHelper.runIf(
-						FrameworkHelper.isTrue(view.getEnableUpdate()), 
+						ObjectHelper.isTrue(view.getEnableUpdate()), 
 						() -> actions.add(CrudAction.UPDATE.name())
 					);
 					ObjectHelper.runIf(
-						FrameworkHelper.isTrue(view.getEnableDelete()), 
+						ObjectHelper.isTrue(view.getEnableDelete()), 
 						() -> {
 							actions.add(CrudAction.DELETE.name());
 							actions.add(CrudAction.DELETES.name());

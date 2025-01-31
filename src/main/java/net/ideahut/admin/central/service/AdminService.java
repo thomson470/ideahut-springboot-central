@@ -7,8 +7,6 @@ import net.ideahut.springboot.object.Page;
 
 public interface AdminService {
 
-	String getWebPath();
-	
 	String getAdminVersion();
 	byte[] getAdminBytes();
 	void saveAdmin(byte[] bytes);

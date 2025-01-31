@@ -28,7 +28,6 @@ import net.ideahut.springboot.audit.AuditAccessible;
 import net.ideahut.springboot.audit.AuditAccessible.AuditMember;
 import net.ideahut.springboot.audit.AuditHandler;
 import net.ideahut.springboot.helper.ErrorHelper;
-import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.helper.WebMvcHelper;
 import net.ideahut.springboot.mapper.DataMapper;
@@ -78,7 +77,7 @@ class AccessServiceImpl implements AccessService, InitializingBean {
 	public Access login(String username, String password) {
 		Account account = accountService.getAccountByUsername(username);
 		ErrorHelper.throwIf(account == null, "LOGIN-01", "Account is not found");
-		ErrorHelper.throwIf(!FrameworkHelper.isTrue(account.getIsActive()), "LOGIN-02", "Account is not active");
+		ErrorHelper.throwIf(!ObjectHelper.isTrue(account.getIsActive()), "LOGIN-02", "Account is not active");
 		ErrorHelper.throwIf(!BCrypt.checkpw(password, account.getPassword()), "LOGIN-03", "Invalid password");
 		String authorization = UUID.randomUUID().toString();
 		HttpServletRequest request = WebMvcHelper.getRequest();
@@ -182,7 +181,7 @@ class AccessServiceImpl implements AccessService, InitializingBean {
 		List<Menu> items, 
 		Account account
 	) {
-		if (FrameworkHelper.isTrue(account.getEnableReload())) {
+		if (ObjectHelper.isTrue(account.getEnableReload())) {
 			Menu menu = new Menu();
 			menu.setId("reload");
 			menu.setTitle("Reload");
@@ -190,7 +189,7 @@ class AccessServiceImpl implements AccessService, InitializingBean {
 			menu.setLink("/reload");
 			items.add(menu);
 		}
-		if (FrameworkHelper.isTrue(account.getEnableTool())) {
+		if (ObjectHelper.isTrue(account.getEnableTool())) {
 			Menu menu = new Menu();
 			menu.setId("tool");
 			menu.setTitle("Tool");
@@ -198,7 +197,7 @@ class AccessServiceImpl implements AccessService, InitializingBean {
 			menu.setLink("/tool");
 			items.add(menu);
 		}
-		if (FrameworkHelper.isTrue(account.getEnableAudit())) {
+		if (ObjectHelper.isTrue(account.getEnableAudit())) {
 			String prefix = "audit";
 			Menu mroot = new Menu();
 			mroot.setId(prefix);

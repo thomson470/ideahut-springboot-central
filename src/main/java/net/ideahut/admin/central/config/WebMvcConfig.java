@@ -14,9 +14,10 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.resource.VersionResourceResolver;
 
 import net.ideahut.admin.central.AppProperties;
-import net.ideahut.admin.central.service.AdminService;
 import net.ideahut.springboot.config.WebMvcBasicConfig;
 import net.ideahut.springboot.helper.FrameworkHelper;
+import net.ideahut.springboot.helper.ObjectHelper;
+import net.ideahut.springboot.helper.StringHelper;
 import net.ideahut.springboot.mapper.DataMapper;
 
 @Configuration
@@ -25,19 +26,16 @@ class WebMvcConfig extends WebMvcBasicConfig {
 	
 	private final AppProperties appProperties;
 	private final DataMapper dataMapper;
-	private final AdminService adminService;
 	private final HandlerInterceptor handlerInterceptor;
 	
 	@Autowired
 	WebMvcConfig(
 		AppProperties appProperties,
 		DataMapper dataMapper,
-		AdminService adminService,
 		HandlerInterceptor handlerInterceptor
 	) {
 		this.appProperties = appProperties;
 		this.dataMapper = dataMapper;
-		this.adminService = adminService;
 		this.handlerInterceptor = handlerInterceptor;
 	}
 	
@@ -80,13 +78,15 @@ class WebMvcConfig extends WebMvcBasicConfig {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		AppProperties.Web web = appProperties.getWeb();
-		if (!registry.hasMappingForPattern(adminService.getWebPath() + "/**")) {
+		String path = ObjectHelper.useOrDefault(web.getPath(), "").trim();
+		path = StringHelper.removeEnd(path, "/");
+		if (!registry.hasMappingForPattern(path + "/**")) {
 			registry
-			.addResourceHandler(adminService.getWebPath() + "/**")
+			.addResourceHandler(path + "/**")
 			.addResourceLocations("file:" + FrameworkHelper.replacePath(web.getLocation()))
 			.setCacheControl(CacheControl.maxAge(60, TimeUnit.DAYS))
 	        .resourceChain(false)
-	        .addResolver(new VersionResourceResolver().addContentVersionStrategy("/ui/**"));
+	        .addResolver(new VersionResourceResolver().addContentVersionStrategy(path + "/**"));
 		}
 		AppProperties.Multimedia multimedia = appProperties.getMultimedia();
 		if (!registry.hasMappingForPattern(multimedia.getPath() + "/**")) {

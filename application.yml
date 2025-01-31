@@ -22,7 +22,7 @@ spring:
          max-lifetime: "1000"
          auto-commit: "true"
       driver-class-name: "<DRIVER>"
-      jdbc-url: "<URL>"
+      jdbc-url: "<JDBC-URL>"
       username: "<USERNAME>"
       password: "<PASSWORD>"
    jpa:
@@ -38,20 +38,23 @@ spring:
                lob:
                   non_contextual_creation: true
 
-app:
+config:
    loggingError: true
    adminFile: "{user.dir}/extras/admin.zip"
-   
-   cors:
-      "Access-Control-Allow-Credentials": "true"
-      "Access-Control-Allow-Origin": "*"
-      "Access-Control-Allow-Methods": "*"
-      "Access-Control-Max-Age": "360"
-      "Access-Control-Allow-Headers": "*"
-      "Access-Control-Expose-Headers": "*"
                      
    ignored-handler-classes:
       - org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController
+
+   filter:
+      traceEnable: true
+      enableTimeResult: true
+      corsHeader:
+         "Access-Control-Allow-Credentials": "true"
+         "Access-Control-Allow-Origin": "*"
+         "Access-Control-Allow-Methods": "*"
+         "Access-Control-Max-Age": "3600"
+         "Access-Control-Allow-Headers": "*"
+         "Access-Control-Expose-Headers": "*"
    
    expiry:
       auth: 
@@ -80,18 +83,29 @@ app:
          database: 0 
          
    web:
+      path: "/ui"
       title: "Central"
       location: "{user.dir}/extras/web/"
       redirectParameter: "_next_"
       timeout: 60
       language: "en"
-      debug: false
+      debug: true
       allowedPaths:
          - "assets"
          - "icons"
+         - "index.html"
+      color:
+         header: "linear-gradient(180deg, rgb(188, 14, 49) 0%, rgba(15, 142, 231, 1) 100%)"
+         primary: ""
+         secondary: ""
+         accent: ""
+         dark: ""
+         positive: ""
+         negative: ""
+         info: ""
+         warning: ""
    
    multimedia:
-      #url: "http://localhost:6401/mm"
       url: "/mm"
       path: "/mm"
       location: "{user.dir}/multimedia/"

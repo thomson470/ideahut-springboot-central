@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import net.ideahut.springboot.context.RequestContext;
 import net.ideahut.springboot.helper.ErrorHelper;
@@ -27,18 +28,28 @@ public class AppAdvice implements ResponseBodyAdvice<Object> {
 	private final AppProperties appProperties;
 	
 	@Autowired
-	AppAdvice(AppProperties appProperties) {
+	AppAdvice(
+		AppProperties appProperties
+	) {
 		this.appProperties = appProperties;
 	}
 	
 	@ExceptionHandler
     @ResponseStatus(code = HttpStatus.OK)
     @ResponseBody
-    public Result handleAllException(Throwable throwable) {
-		if (Boolean.TRUE.equals(appProperties.getLoggingError())) {
-    		log.error(AppAdvice.class.getSimpleName(), throwable);
-    	}
-		return FrameworkHelper.getErrorAsResult(throwable);
+    public Result handleAllException(
+    	HttpServletRequest request,
+    	Throwable throwable
+    ) {
+		if (request.getServletPath().startsWith(appProperties.getMultimedia().getPath())) {
+			// kasus: No presentation acceptable, seperti pengambilan resource gambar
+			return null;
+		} else {
+			if (Boolean.TRUE.equals(appProperties.getLoggingError())) {
+	    		log.error(AppAdvice.class.getSimpleName(), throwable);
+	    	}
+			return FrameworkHelper.getErrorAsResult(throwable);
+		}
     }
 
 	@Override

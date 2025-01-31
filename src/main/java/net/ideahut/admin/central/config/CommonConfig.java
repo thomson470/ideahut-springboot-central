@@ -99,19 +99,19 @@ class CommonConfig {
 			boolean allowed = false;
 			switch (action) {
 				case LIST, MAP, PAGE, SINGLE, UNIQUE:
-					allowed = FrameworkHelper.isTrue(view.getEnableRetrieve());
+					allowed = ObjectHelper.isTrue(view.getEnableRetrieve());
 					break;
 				case CREATE:
-					allowed = FrameworkHelper.isTrue(view.getEnableCreate());
+					allowed = ObjectHelper.isTrue(view.getEnableCreate());
 					break;
 				case UPDATE:
-					allowed = FrameworkHelper.isTrue(view.getEnableUpdate());
+					allowed = ObjectHelper.isTrue(view.getEnableUpdate());
 					break;
 				case SAVE:
-					allowed = FrameworkHelper.isTrue(view.getEnableUpdate()) || FrameworkHelper.isTrue(view.getEnableCreate());
+					allowed = ObjectHelper.isTrue(view.getEnableUpdate()) || ObjectHelper.isTrue(view.getEnableCreate());
 					break;
 				case DELETE, DELETES:
-					allowed = FrameworkHelper.isTrue(view.getEnableDelete());
+					allowed = ObjectHelper.isTrue(view.getEnableDelete());
 					break;
 			}
 			return allowed;

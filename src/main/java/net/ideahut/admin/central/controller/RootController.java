@@ -39,6 +39,8 @@ import net.ideahut.springboot.crud.CrudPermission;
 import net.ideahut.springboot.crud.CrudRequest;
 import net.ideahut.springboot.crud.CrudResult;
 import net.ideahut.springboot.helper.ErrorHelper;
+import net.ideahut.springboot.helper.ObjectHelper;
+import net.ideahut.springboot.helper.StringHelper;
 import net.ideahut.springboot.helper.WebMvcHelper;
 import net.ideahut.springboot.init.InitRequest;
 import net.ideahut.springboot.object.MapStringObject;
@@ -50,12 +52,17 @@ import net.ideahut.springboot.object.Result;
 @RequestMapping("/")
 class RootController {
 	
+	private static class Strings {
+		private static final String SLASH = new StringBuilder("/").toString();
+	}
+	
 	private final AppProperties appProperties;
 	private final AccessService accessService;
 	private final AdminService adminService;
 	private final GridService gridService;
 	private final CrudPermission crudPermission;
 	private final CrudHandler crudHandler;
+	private final String webPath;
 	
 	@Autowired
 	RootController(
@@ -72,6 +79,10 @@ class RootController {
 		this.gridService = gridService;
 		this.crudPermission = crudPermission;
 		this.crudHandler = crudHandler;
+		AppProperties.Web web = ObjectHelper.useOrDefault(appProperties.getWeb(), AppProperties.Web::new);
+		String path = ObjectHelper.useOrDefault(web.getPath(), "").trim();
+		path = StringHelper.removeEnd(path, Strings.SLASH) + Strings.SLASH;
+		this.webPath = path;
 	}
 	
 	/*
@@ -81,7 +92,7 @@ class RootController {
 	@GetMapping
 	void index() {
 		try {
-			RequestContext.currentContext().getResponse().sendRedirect(adminService.getWebPath() + "/index.html");
+			RequestContext.currentContext().getResponse().sendRedirect(webPath + "index.html");
 		} catch (Exception e) {
 			throw ErrorHelper.exception(e);
 		}

@@ -73,7 +73,7 @@ class ToolController implements InitializingBean {
 		@RequestParam("password") String password
 	) {
 		Account account = ObjectHelper.useOrDefault(Access.get().getAccount(), Account::new);
-		ErrorHelper.throwIf(!FrameworkHelper.isTrue(account.getEnableImageUpload()), Strings.USER_NOT_ALLOWED);
+		ErrorHelper.throwIf(!ObjectHelper.isTrue(account.getEnableImageUpload()), Strings.USER_NOT_ALLOWED);
 		ErrorHelper.throwIf(account.getPassword() == null, "Invalid account");
 		ErrorHelper.throwIf(!BCrypt.checkpw(password, account.getPassword()), "Invalid password");
 		adminService.syncImages();
@@ -96,7 +96,7 @@ class ToolController implements InitializingBean {
 		@RequestParam("file") MultipartFile file
 	) throws Exception {
 		Account account = ObjectHelper.useOrDefault(Access.get().getAccount(), Account::new);
-		ErrorHelper.throwIf(!FrameworkHelper.isTrue(account.getEnableImageUpload()), Strings.USER_NOT_ALLOWED);
+		ErrorHelper.throwIf(!ObjectHelper.isTrue(account.getEnableImageUpload()), Strings.USER_NOT_ALLOWED);
 		File directory = directories.get(type);
 		ErrorHelper.throwIf(directory == null, "Invalid type: " + type);
 		Multimedia multimedia = Multimedia.of(file.getBytes()).setWidth(480);
@@ -116,7 +116,7 @@ class ToolController implements InitializingBean {
 		@RequestParam("file") MultipartFile file
 	) throws Exception {
 		Account account = ObjectHelper.useOrDefault(Access.get().getAccount(), Account::new);
-		ErrorHelper.throwIf(!FrameworkHelper.isTrue(account.getEnableAdminUpload()), Strings.USER_NOT_ALLOWED);
+		ErrorHelper.throwIf(!ObjectHelper.isTrue(account.getEnableAdminUpload()), Strings.USER_NOT_ALLOWED);
 		String oldVersion = adminService.getAdminVersion();
 		Integer oldSize = adminService.getAdminBytes().length;
 		adminService.saveAdmin(file.getBytes());

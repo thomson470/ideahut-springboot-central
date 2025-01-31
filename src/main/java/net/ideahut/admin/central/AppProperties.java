@@ -2,9 +2,7 @@ package net.ideahut.admin.central;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.ideahut.springboot.definition.FilterDefinition;
 import net.ideahut.springboot.entity.EntityForeignKeyParam;
 import net.ideahut.springboot.helper.ErrorHelper;
 import net.ideahut.springboot.helper.FrameworkHelper;
@@ -21,7 +20,7 @@ import net.ideahut.springboot.redis.RedisProperties;
 import net.ideahut.springboot.task.TaskProperties;
 
 @Configuration
-@ConfigurationProperties(prefix = "app")
+@ConfigurationProperties(prefix = "config")
 @Setter
 @Getter
 public class AppProperties {
@@ -31,7 +30,6 @@ public class AppProperties {
 	private String adminFile;
 	private EntityForeignKeyParam foreignKey;
 	
-	private Map<String, String> cors = new HashMap<>();
 	private List<Class<?>> ignoredHandlerClasses = new ArrayList<>();
 	
 	private TaskProperties task = new TaskProperties();
@@ -41,10 +39,13 @@ public class AppProperties {
 	private Multimedia multimedia = new Multimedia();
 	private Grid grid = new Grid();
 	
+	private FilterDefinition filter;
+	
 	
 	@Setter
 	@Getter
 	public static class Web {
+		private String path;
 		private String title;
 		private String location;
 		private String redirectParameter;
@@ -52,6 +53,21 @@ public class AppProperties {
 		private Integer timeout;
 		private String language;
 		private Boolean debug;
+		private Color color;
+	}
+	
+	@Getter
+	@Setter
+	public static class Color {
+		private String header;
+		private String primary;
+		private String secondary;
+		private String accent;
+		private String dark;
+		private String positive;
+		private String negative;
+		private String info;
+		private String warning;
 	}
 	
 	@Setter
