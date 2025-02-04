@@ -1,18 +1,15 @@
 package net.ideahut.admin.central.config;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.persistenceunit.PersistenceManagedTypes;
@@ -20,13 +17,17 @@ import org.springframework.orm.jpa.persistenceunit.PersistenceManagedTypesScanne
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 import jakarta.persistence.EntityManagerFactory;
 import net.ideahut.admin.central.AppConstants;
+import net.ideahut.admin.central.AppProperties;
 import net.ideahut.springboot.audit.AuditHandler;
-import net.ideahut.springboot.audit.DatabaseAuditProperties;
 import net.ideahut.springboot.audit.DatabaseMultiAuditHandler;
+import net.ideahut.springboot.definition.DatabaseAuditDefinition;
 import net.ideahut.springboot.entity.EntityTrxManager;
-import net.ideahut.springboot.helper.FrameworkHelper;
+import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.task.TaskHandler;
 
 @Configuration
@@ -34,17 +35,11 @@ import net.ideahut.springboot.task.TaskHandler;
 class TrxManagerConfig {
 	
 	@Bean
-	@ConfigurationProperties(prefix = "spring.datasource")
 	DataSource dataSource(
-		Environment environment		
+		AppProperties appProperties	
 	) {
-		String jndi = environment.getProperty("spring.datasource.jndi-name", "").trim();
-		if (!jndi.isEmpty()) {
-			JndiDataSourceLookup lookup = new JndiDataSourceLookup();
-			return lookup.getDataSource(jndi);
-		} else {
-			return DataSourceBuilder.create().build();
-		}
+		HikariConfig config = new HikariConfig(appProperties.getDatasource());
+		return new HikariDataSource(config);
     }
 	
 	@Bean
@@ -60,21 +55,23 @@ class TrxManagerConfig {
 	
 	@Bean
 	LocalContainerEntityManagerFactoryBean entityManagerFactory(
-		Environment environment,
+		AppProperties appProperties,
 		EntityManagerFactoryBuilder builder,
 		PersistenceManagedTypes persistenceManagedTypes,
 		DataSource dataSource
 	) {
-		Map<String, Object> properties = FrameworkHelper.getHibernateSettings(environment, "spring.jpa.properties");
+		Properties hibernate = ObjectHelper.useOrDefault(appProperties.getHibernate(), Properties::new);
+		Map<String, Object> properties = new HashMap<>();
+		for (Map.Entry<Object, Object> entry : hibernate.entrySet()) {
+			properties.put("hibernate." + entry.getKey(), entry.getValue());
+		}
 		return builder
-			.dataSource(dataSource)		
-			.persistenceUnit("default")
+			.dataSource(dataSource)	
 			.managedTypes(persistenceManagedTypes)
 			.properties(properties)			
 			.build();
 	}
 
-	@Primary
 	@Bean
 	PlatformTransactionManager transactionManager(
 		EntityManagerFactory entityManagerFactory
@@ -84,18 +81,16 @@ class TrxManagerConfig {
 	
 	@Bean
 	AuditHandler auditHandler(
+		AppProperties appProperties,
 		EntityTrxManager entityTrxManager,
 		TaskHandler taskHandler
 	) {
-		DatabaseAuditProperties.Table table = new DatabaseAuditProperties.Table();
-		table.setPrefix("a_");
-		DatabaseAuditProperties properties = new DatabaseAuditProperties();
-		properties.setTable(table);
+		DatabaseAuditDefinition audit = appProperties.getAudit();
 		return new DatabaseMultiAuditHandler()
 		.setEntityTrxManager(entityTrxManager)
-		.setProperties(properties)
-		.setTaskHandler(taskHandler)
-		.setRejectNonAuditEntity(true);
+		.setProperties(audit.getProperties())
+		.setRejectNonAuditEntity(!Boolean.FALSE.equals(audit.getRejectNonAuditEntity()))
+		.setTaskHandler(taskHandler);
 	}
 	
 }

@@ -38,13 +38,24 @@ import net.ideahut.springboot.task.TaskHandlerImpl;
 class CommonConfig {
 	
 	@Bean
+	InitHandler initHandler(
+		ApplicationContext applicationContext		
+	) {
+		return new InitHandlerImpl()
+		.setEndpoint(() -> "http://localhost:" + FrameworkHelper.getPort(applicationContext) + "/warmup");
+	}
+	
+	@Bean
 	DataMapper dataMapper() {
 		return new DataMapperImpl();
 	}
 	
 	@Bean
-	EntityTrxManager entityTrxManager() {
-		return new EntityTrxManagerImpl();
+	EntityTrxManager entityTrxManager(
+		AppProperties appProperties
+	) {
+		return new EntityTrxManagerImpl()
+		.setForeignKeyParam(appProperties.getForeignKey());
 	}
 	
 	@Bean
@@ -61,20 +72,12 @@ class CommonConfig {
 	}
 	
 	@Bean
-	TaskHandler auditTask(
+	TaskHandler taskHandler(
 		AppProperties appProperties
 	) {
 		return new TaskHandlerImpl()
 		.setTaskProperties(appProperties.getTask());
     }
-	
-	@Bean
-	InitHandler initHandler(
-		ApplicationContext applicationContext		
-	) {
-		return new InitHandlerImpl()
-		.setEndpoint(() -> "http://localhost:" + FrameworkHelper.getPort(applicationContext) + "/warmup");
-	}
 	
 	@Bean
 	SingletonHandler singletonHandler() {

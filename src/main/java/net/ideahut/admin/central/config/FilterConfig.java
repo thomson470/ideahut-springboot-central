@@ -9,7 +9,6 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import net.ideahut.admin.central.AppProperties;
 import net.ideahut.springboot.definition.FilterDefinition;
 import net.ideahut.springboot.filter.WebMvcRequestFilter;
-import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.helper.WebMvcHelper;
 
 @Configuration
@@ -21,14 +20,11 @@ class FilterConfig {
 		AppProperties appProperties,
 		RequestMappingHandlerMapping handlerMapping
 	) {	
-		FilterDefinition filter = ObjectHelper.useOrDefault(
-			appProperties.getFilter(), 
-			FilterDefinition::new
-		);
+		FilterDefinition filter = appProperties.getFilter();
 		return WebMvcHelper.createFilterBean(
 			environment,
 			new WebMvcRequestFilter()
-				.setCorsHeaders(filter.getCorsHeader())
+				.setCorsHeaders(filter.getCorsHeaders())
 				.setEnableTimeResult(filter.getEnableTimeResult())
 				.setHandlerMapping(handlerMapping)
 				.setTraceEnable(filter.getTraceEnable())

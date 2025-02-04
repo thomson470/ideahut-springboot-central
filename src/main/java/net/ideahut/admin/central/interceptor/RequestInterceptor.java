@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -87,7 +88,7 @@ class RequestInterceptor implements HandlerInterceptor {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			return false;
 		}
-		if (!appProperties.getIgnoredHandlerClasses().contains(handlerMethod.getBeanType())) {
+		if (!ObjectHelper.isAssignable(ErrorController.class, handlerMethod.getBeanType())) {
 			AuditInfo.context().setInfo(
 				handlerMethod.getBeanType().getName() + 
 				":" + 
@@ -95,7 +96,7 @@ class RequestInterceptor implements HandlerInterceptor {
 				"(" + 
 				handlerMethod.getMethod().getParameterCount() + 
 				")"
-			);				
+			);
 		}
 		if (access.getAccount() != null) {
 			AuditInfo.context().setAuditor(access.getAccount().getUsername());

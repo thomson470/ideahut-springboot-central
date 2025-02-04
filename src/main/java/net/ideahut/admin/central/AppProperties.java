@@ -1,8 +1,7 @@
 package net.ideahut.admin.central;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -10,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.ideahut.springboot.definition.DatabaseAuditDefinition;
 import net.ideahut.springboot.definition.FilterDefinition;
 import net.ideahut.springboot.entity.EntityForeignKeyParam;
 import net.ideahut.springboot.helper.ErrorHelper;
@@ -26,20 +26,19 @@ import net.ideahut.springboot.task.TaskProperties;
 public class AppProperties {
 	
 	private Boolean waitAllBeanConfigured;
-	private Boolean loggingError;
+	private Boolean logAllError;
 	private String adminFile;
+	private Properties datasource;
+	private Properties hibernate;
 	private EntityForeignKeyParam foreignKey;
-	
-	private List<Class<?>> ignoredHandlerClasses = new ArrayList<>();
-	
-	private TaskProperties task = new TaskProperties();
-	private RedisProperties.Connection redis = new RedisProperties.Connection();
-	private Web web = new Web();
-	private Expiry expiry = new Expiry();
-	private Multimedia multimedia = new Multimedia();
-	private Grid grid = new Grid();
-	
+	private DatabaseAuditDefinition audit;
 	private FilterDefinition filter;
+	private Expiry expiry;
+	private TaskProperties task;
+	private RedisProperties.Connection redis;
+	private Web web;
+	private Multimedia multimedia;
+	private Grid grid;
 	
 	
 	@Setter
@@ -60,6 +59,7 @@ public class AppProperties {
 	@Setter
 	public static class Color {
 		private String header;
+		private String title;
 		private String primary;
 		private String secondary;
 		private String accent;

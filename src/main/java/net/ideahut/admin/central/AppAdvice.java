@@ -42,10 +42,9 @@ public class AppAdvice implements ResponseBodyAdvice<Object> {
     	Throwable throwable
     ) {
 		if (request.getServletPath().startsWith(appProperties.getMultimedia().getPath())) {
-			// kasus: No presentation acceptable, seperti pengambilan resource gambar
 			return null;
 		} else {
-			if (Boolean.TRUE.equals(appProperties.getLoggingError())) {
+			if (Boolean.TRUE.equals(appProperties.getLogAllError())) {
 	    		log.error(AppAdvice.class.getSimpleName(), throwable);
 	    	}
 			return FrameworkHelper.getErrorAsResult(throwable);

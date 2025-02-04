@@ -3,6 +3,9 @@ server:
       
 debug: false
 
+#
+# SPRING
+#
 spring:
    application:
       name: ideahut-springboot-central
@@ -12,43 +15,74 @@ spring:
          max-request-size: 256MB
    main:
       banner-mode: "off"
-   
-   datasource:
-      hikari:
-         connection-timeout: "10000"
-         minimum-idle: "10"
-         maximum-pool-size: "10"
-         idle-timeout: "5000"
-         max-lifetime: "1000"
-         auto-commit: "true"
-      driver-class-name: "<DRIVER>"
-      jdbc-url: "<JDBC-URL>"
-      username: "<USERNAME>"
-      password: "<PASSWORD>"
    jpa:
-      properties:
-         hibernate:
-            hbm2ddl:
-               auto: update
-               #auto: none
-            show_sql: true
-            #generate_statistics: true
-            audit_identifier: "admin_central"
-            jdbc:
-               lob:
-                  non_contextual_creation: true
+      open-in-view: false
 
+#
+# CONFIG
+#
 config:
-   loggingError: true
+   waitAllBeanConfigured: true
+   logAllError: true
    adminFile: "{user.dir}/extras/admin.zip"
-                     
-   ignored-handler-classes:
-      - org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController
+   
+   #
+   # DATASOURCE
+   #
+   datasource:
+      driverClassName: "org.postgresql.Driver"
+      jdbcUrl: "jdbc:postgresql://localhost:5432/admin_central"
+      username: "postgres"
+      password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
+      connectionTimeout: 15000
+      minimumIdle: 10
+      maximumPoolSize: 10
+      idleTimeout: 600000
+      maxLifetime: 1800000
+      poolName: "AdminCentralDatasourcePool"
+   
+   #
+   # HIBERNATE
+   #
+   hibernate:
+      hbm2ddl:
+         auto: update
+         #auto: none
+      show_sql: true
+      #generate_statistics: true
+      audit_identifier: admin_central
+      jdbc:
+         lob:
+            non_contextual_creation: true 
+   
+   #
+   # FOREIGN KEY
+   #   
+   foreignKey:
+      enableExecution: false
+      dropBeforeCreate: true
+      onUpdateAction: true 
+   
+   #
+   # AUDIT
+   #
+   audit:
+      rejectNonAuditEntity: true
+      properties:
+         generate:
+            table: true
+         enable:
+            audit: true
+         table:
+            prefix: "_a_"
 
+   #
+   # FILTER
+   #   
    filter:
       traceEnable: true
       enableTimeResult: true
-      corsHeader:
+      corsHeaders:
          "Access-Control-Allow-Credentials": "true"
          "Access-Control-Allow-Origin": "*"
          "Access-Control-Allow-Methods": "*"
@@ -56,6 +90,9 @@ config:
          "Access-Control-Allow-Headers": "*"
          "Access-Control-Expose-Headers": "*"
    
+   #
+   # EXPIRY      
+   #
    expiry:
       auth: 
          unit: MINUTES
@@ -66,22 +103,31 @@ config:
       token: 
          unit: MINUTES
          value: 60
-
+   
+   #
+   # TASK
+   #
    task:      
       threadNamePrefix: "TASK"
       corePoolSize: 8
       maxPoolSize: 32
       waitForJobsToCompleteOnShutdown: true
       allowCoreThreadTimeOut: true
-
+   
+   #
+   # REDIS
+   #
    redis:
       type: 0
       standalone:
-         host: "<HOST>"
-         port: "<PORT>"
-         password: "<PASSWORD>"
+         host: "127.0.0.1"
+         port: "6379"
+         password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
          database: 0 
-         
+   
+   #
+   # WEB      
+   #
    web:
       path: "/ui"
       title: "Central"
@@ -96,6 +142,7 @@ config:
          - "index.html"
       color:
          header: "linear-gradient(180deg, rgb(188, 14, 49) 0%, rgba(15, 142, 231, 1) 100%)"
+         title: "gold"
          primary: ""
          secondary: ""
          accent: ""
@@ -105,17 +152,26 @@ config:
          info: ""
          warning: ""
    
+   #
+   # MULTIMEDIA
+   #
    multimedia:
       url: "/mm"
       path: "/mm"
       location: "{user.dir}/multimedia/"
-      
+   
+   #
+   # GRID   
+   #
    grid:
       account: "{user.dir}/extras/grid/account.yaml"
       project: "{user.dir}/extras/grid/project.yaml"
       module: "{user.dir}/extras/grid/module.yaml"
       redirect: "{user.dir}/extras/grid/redirect.yaml"
-         
+
+#
+# LOGGING         
+#
 logging:
    file:
       name: "./logs/ideahut-springboot-central.log"
