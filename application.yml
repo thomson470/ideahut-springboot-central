@@ -30,10 +30,10 @@ config:
    # DATASOURCE
    #
    datasource:
-      driverClassName: "org.postgresql.Driver"
-      jdbcUrl: "jdbc:postgresql://localhost:5432/admin_central"
-      username: "postgres"
-      password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
+      driverClassName: "<DRIVER>"
+      jdbcUrl: "<JDBC-URL>"
+      username: "<USERNAME>"
+      password: "<PASSWORD>"
       connectionTimeout: 15000
       minimumIdle: 10
       maximumPoolSize: 10
@@ -59,7 +59,7 @@ config:
    # FOREIGN KEY
    #   
    foreignKey:
-      enableExecution: false
+      enableExecution: true
       dropBeforeCreate: true
       onUpdateAction: true 
    
@@ -120,9 +120,9 @@ config:
    redis:
       type: 0
       standalone:
-         host: "127.0.0.1"
-         port: "6379"
-         password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
+         host: "<HOST>"
+         port: "<PORT>"
+         password: "<PASSWORD>"
          database: 0 
    
    #
