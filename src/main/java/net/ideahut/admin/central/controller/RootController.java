@@ -81,7 +81,7 @@ class RootController {
 		this.crudHandler = crudHandler;
 		AppProperties.Web web = ObjectHelper.useOrDefault(appProperties.getWeb(), AppProperties.Web::new);
 		String path = ObjectHelper.useOrDefault(web.getPath(), "").trim();
-		path = StringHelper.removeEnd(path, Strings.SLASH) + Strings.SLASH;
+		path = StringHelper.removeEnd(path, Strings.SLASH);
 		this.webPath = path;
 	}
 	
@@ -92,11 +92,24 @@ class RootController {
 	@GetMapping
 	void index() {
 		try {
-			RequestContext.currentContext().getResponse().sendRedirect(webPath + "index.html");
+			RequestContext.currentContext().getResponse().sendRedirect(webPath + "/index.html");
 		} catch (Exception e) {
 			throw ErrorHelper.exception(e);
 		}
     }
+	
+	/*
+	 * FAVICON
+	 */
+	@Public
+	@GetMapping("/favicon.ico")
+	void favicon() {
+		try {
+			RequestContext.currentContext().getResponse().sendRedirect(webPath + "/favicon.ico");
+		} catch (Exception e) {
+			throw ErrorHelper.exception(e);
+		}
+	}
 	
 	/*
 	 * WARMUP

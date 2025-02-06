@@ -41,14 +41,17 @@ public class AppAdvice implements ResponseBodyAdvice<Object> {
     	HttpServletRequest request,
     	Throwable throwable
     ) {
-		if (request.getServletPath().startsWith(appProperties.getMultimedia().getPath())) {
-			return null;
-		} else {
+		String path = request.getServletPath();
+		if (
+			!path.startsWith(appProperties.getMultimedia().getPath()) && 
+			!path.startsWith(appProperties.getWeb().getPath())
+		) {
 			if (Boolean.TRUE.equals(appProperties.getLogAllError())) {
 	    		log.error(AppAdvice.class.getSimpleName(), throwable);
 	    	}
 			return FrameworkHelper.getErrorAsResult(throwable);
 		}
+		return null;
     }
 
 	@Override

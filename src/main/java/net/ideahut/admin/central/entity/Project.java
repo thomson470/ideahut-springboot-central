@@ -33,7 +33,7 @@ public class Project extends EntityAudit {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 	
-	@Column(name = "icon")
+	@Column(name = "icon", length = 1024)
 	private String icon;
 	
 	@Column(name = "description", length = 1024)

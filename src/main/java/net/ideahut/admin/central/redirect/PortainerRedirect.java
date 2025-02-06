@@ -13,6 +13,7 @@ import org.springframework.context.ApplicationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import lombok.extern.slf4j.Slf4j;
 import net.ideahut.admin.central.entity.Module;
 import net.ideahut.admin.central.object.Forward;
 import net.ideahut.springboot.helper.ErrorHelper;
@@ -25,6 +26,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+@Slf4j
 public class PortainerRedirect extends RedirectBase {
 
 	public PortainerRedirect(ApplicationContext applicationContext) {
@@ -91,7 +93,8 @@ public class PortainerRedirect extends RedirectBase {
 		    	jwt = node.get("jwt").asText();
 		    }
 		} catch (Exception e) {
-			throw ErrorHelper.exception(e);
+			log.error("PortainerRedirect " + url, e);
+			//throw ErrorHelper.exception(e);//-
 		} finally {
 			if (response != null) {
 				response.close();
@@ -100,7 +103,9 @@ public class PortainerRedirect extends RedirectBase {
 		Forward forward = new Forward();
 		forward.setAction(url);
 		forward.setMethod("get");
-		forward.setParameter("access_token", URLEncoder.encode(jwt, StandardCharsets.UTF_8));
+		if (jwt != null && !jwt.isEmpty()) {
+			forward.setParameter("access_token", URLEncoder.encode(jwt, StandardCharsets.UTF_8));
+		}
 		return forward;
 	}
 	

@@ -162,8 +162,16 @@
 				<artifactId>native-maven-plugin</artifactId>
 				<configuration>
 					<buildArgs>
+						<buildArg>--strict-image-heap</buildArg>
 						<buildArg>--verbose</buildArg>
+						<buildArg>-Djava.awt.headless=false</buildArg>
 						<buildArg>-H:+ReportUnsupportedElementsAtRuntime</buildArg>
+						<buildArg>--initialize-at-build-time=com.ctc.wstx.api.CommonConfig</buildArg>
+						<buildArg>--initialize-at-build-time=com.ctc.wstx.api.ReaderConfig</buildArg>
+						<buildArg>--initialize-at-build-time=com.ctc.wstx.stax.WstxInputFactory</buildArg>
+						<buildArg>--initialize-at-build-time=com.ctc.wstx.util.DefaultXmlSymbolTable</buildArg>
+						<buildArg>--initialize-at-build-time=com.ctc.wstx.util.SymbolTable</buildArg>
+						<buildArg>--initialize-at-build-time=com.ctc.wstx.util.SymbolTable$Bucket</buildArg>
 					</buildArgs>
 				</configuration>
 			</plugin>
