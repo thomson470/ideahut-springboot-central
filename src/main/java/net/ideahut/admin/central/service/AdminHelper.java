@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +13,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.data.redis.core.ValueOperations;
 
 import net.ideahut.admin.central.AppProperties;
 import net.ideahut.springboot.admin.AdminProperties;
@@ -24,13 +27,98 @@ final class AdminHelper {
 	
 	private AdminHelper() {}
 	
-	private static final String ADMIN = "__admin__";
-	private static final String CENTRAL = "__central__";
+	private static final class AppId {
+		private static final String ADMIN = "__admin__";
+		private static final String CENTRAL = "__central__";
+	}
 	
-	static void saveAdminFile(
+	private static final class RedisKey {
+		static String lock(String redisPrefix) {
+			return redisPrefix + "ADMIN***LOCK";
+		}
+		static String version(String redisPrefix) {
+			return redisPrefix + "ADMIN-VERSION";
+		}
+		static String bytes(String redisPrefix) {
+			return redisPrefix + "ADMIN-BYTES";
+		}
+	}
+	
+	/*
+	 * LOCK
+	 */
+	static synchronized boolean lock(AdminServiceImpl service) {
+		String key = RedisKey.lock(service.redis.getPrefix());
+		ValueOperations<String, byte[]> valops = service.redis.getTemplate().opsForValue();
+		byte[] bytes = valops.get(key);
+		if (bytes != null) {
+			return false;
+		}
+		valops.set(key, "1".getBytes());
+		return true;
+	}
+	
+	/*
+	 * UNLOCK
+	 */
+	static void unlock(AdminServiceImpl service) {
+		String key = RedisKey.lock(service.redis.getPrefix());
+		service.redis.getTemplate().delete(key);
+	}
+	
+	/*
+	 * CLEAR
+	 */
+	static void clear(AdminServiceImpl service) {
+		String prefix = service.redis.getPrefix();
+		service.redis.getTemplate().delete(Arrays.asList(
+			RedisKey.version(prefix),
+			RedisKey.bytes(prefix)
+		));
+	}
+	
+	/*
+	 * RELOAD
+	 */
+	static void reload(AdminServiceImpl service) throws Exception {
+		File file = service.adminFile.toFile();
+		if (file.isFile()) {
+			BasicFileAttributes attr = Files.readAttributes(service.adminFile, BasicFileAttributes.class);
+			String version = attr.lastModifiedTime().toMillis() + "";
+			String prefix = service.redis.getPrefix();
+			ValueOperations<String, byte[]> valops = service.redis.getTemplate().opsForValue();
+			if (!service.isAdminRedirect()) {
+				byte[] bytes = Files.readAllBytes(service.adminFile);
+				valops.set(RedisKey.bytes(prefix), bytes);
+			}
+			valops.set(RedisKey.version(prefix), version.getBytes());
+		}
+	}
+	
+	/*
+	 * VERSION
+	 */
+	static String version(AdminServiceImpl service) {
+		byte[] value = service.redis.getTemplate().opsForValue().get(RedisKey.version(service.redis.getPrefix()));
+		return value != null ? new String(value) : "";
+	}
+	
+	/*
+	 * BYTES
+	 */
+	static byte[] bytes(AdminServiceImpl service) {
+		byte[] value = service.redis.getTemplate().opsForValue().get(RedisKey.bytes(service.redis.getPrefix()));
+		return value != null ? value : ObjectHelper.emptyBinary();
+	}
+	
+	/*
+	 * SAVE
+	 */
+	static void save(
 		AdminServiceImpl service,	
 		byte[] bytes
 	) {
+		String appId = AppId.ADMIN;
 		File adminFile = service.adminFile.toFile();
 		File tmpdir = new File(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString().replace("-", ""));
 		tmpdir.mkdirs();
@@ -55,9 +143,9 @@ final class AdminHelper {
 	        	zen = zis.getNextEntry();
 	        }
 	        zis.closeEntry();
-	        if (!QuasarHelper.isValidApp(ADMIN, tmpdir)) {
+	        if (!QuasarHelper.isValidApp(appId, tmpdir)) {
 	        	// check file yang diupload web admin atau tidak
-	        	throw new Exception("Invalid admin application, id: '" + ADMIN + "'");
+	        	throw new Exception("Invalid admin application, id: '" + appId + "'");
 	        }
 	        FileUtils.deleteQuietly(adminFile);
 	        FileUtils.writeByteArrayToFile(adminFile, bytes);
@@ -73,12 +161,16 @@ final class AdminHelper {
 		}
 	}
 	
+	/*
+	 * PREPARE UI
+	 */
 	static void prepareUI(AdminServiceImpl service) throws Exception {
+		String appId = AppId.CENTRAL;
 		AppProperties.Web web = ObjectHelper.useOrDefault(service.appProperties.getWeb(), AppProperties.Web::new);
 		String location = FrameworkHelper.replacePath(web.getLocation());
 		File directory = new File(location);
-		if (!QuasarHelper.isValidApp(CENTRAL, directory)) {
-			throw new Exception("Invalid central application, id: '" + CENTRAL + "'");
+		if (!QuasarHelper.isValidApp(appId, directory)) {
+			throw new Exception("Invalid central application, id: '" + appId + "'");
 		}
 		File assetsDir = new File(directory, "assets");
 		List<File> assetFiles = Arrays.asList(assetsDir.listFiles());
@@ -86,7 +178,7 @@ final class AdminHelper {
 		webPath = StringHelper.removeEnd(webPath, "/");
 		String apiPath = "";
 		String title = ObjectHelper.useOrDefault(web.getTitle(), "Central");
-		AdminProperties.Web.Color color = service.dataMapper.convert(web.getColor(), AdminProperties.Web.Color.class);
+		AdminProperties.Web.Color color = FrameworkHelper.defaultDataMapper().convert(web.getColor(), AdminProperties.Web.Color.class);
 		AdminProperties properties = new AdminProperties()
 		.setApi(
 			new AdminProperties.Api()
@@ -104,7 +196,7 @@ final class AdminHelper {
 			.setTitle(title)
 		);
 		QuasarHelper.prepareIndexJs(
-			CENTRAL,
+			appId,
 			properties, 
 			apiPath,
 			service.applicationContext, 
@@ -113,30 +205,33 @@ final class AdminHelper {
 			title
 		);
 		QuasarHelper.prepareIndexCss(
-			CENTRAL,
+			appId,
 			properties, 
 			assetFiles, 
 			webPath
 		);
 		QuasarHelper.prepareIndexHtml(
-			CENTRAL,
+			appId,
 			directory, 
 			webPath, 
 			title
 		);
 		QuasarHelper.prepareBlankJs(
-			CENTRAL,
+			appId,
 			assetFiles, 
 			webPath
 		);
 		prepareProjectJs(
-			CENTRAL, 
+			appId, 
 			assetFiles, 
 			webPath
 		);
 	}
 	
-	public static void prepareProjectJs(
+	/*
+	 * PREPARE PROJECT JS
+	 */
+	private static void prepareProjectJs(
 		String appId,
 		List<File> assetFiles,
 		String webPath

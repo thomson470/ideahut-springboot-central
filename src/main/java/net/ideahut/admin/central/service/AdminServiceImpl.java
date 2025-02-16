@@ -1,10 +1,7 @@
 package net.ideahut.admin.central.service;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -17,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -33,74 +29,95 @@ import net.ideahut.admin.central.entity.ProjectModule;
 import net.ideahut.admin.central.entity.Redirect;
 import net.ideahut.admin.central.object.Access;
 import net.ideahut.admin.central.object.Forward;
+import net.ideahut.admin.central.object.Redis;
 import net.ideahut.admin.central.redirect.RedirectBase;
+import net.ideahut.springboot.bean.BeanConfigure;
 import net.ideahut.springboot.bean.BeanReload;
+import net.ideahut.springboot.bean.BeanShutdown;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.entity.SessionCallable;
 import net.ideahut.springboot.entity.TrxManagerInfo;
 import net.ideahut.springboot.helper.ErrorHelper;
 import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.helper.ObjectHelper;
-import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.object.Page;
 import net.ideahut.springboot.object.TimeValue;
 import net.ideahut.springboot.singleton.SingletonHandler;
 import net.ideahut.springboot.task.TaskHandler;
 
 @Service
-class AdminServiceImpl implements AdminService, InitializingBean, BeanReload {
+class AdminServiceImpl implements 
+	AdminService,
+	BeanReload, 
+	BeanShutdown,
+	BeanConfigure<AdminService>
+{
 	
 	final AppProperties appProperties;
-	final DataMapper dataMapper;
-	final ApplicationContext applicationContext;
-	
-	private final SingletonHandler singletonHandler;
-	private final EntityTrxManager entityTrxManager;
 	private final TaskHandler taskHandler;
 	
+	private TrxManagerInfo trxManagerInfo;
+	private SingletonHandler singletonHandler;
+	Redis redis;
+	ApplicationContext applicationContext;
+	
 	Path adminFile;
-	private byte[] adminBytes;
-	private String adminVersion;
+	private boolean isAdminRedirect;
+	private String adminRedirectUrl;
 	
 	@Autowired
 	AdminServiceImpl(
 		AppProperties appProperties,
-		ApplicationContext applicationContext,
-		DataMapper dataMapper,
-		SingletonHandler singletonHandler,
-		EntityTrxManager entityTrxManager,
 		TaskHandler taskHandler
 	) {
 		this.appProperties = appProperties;
-		this.applicationContext = applicationContext;
-		this.dataMapper = dataMapper;
-		this.singletonHandler = singletonHandler;
-		this.entityTrxManager = entityTrxManager;
 		this.taskHandler = taskHandler;
 	}
 	
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		String location = ObjectHelper.callOrElse(
-			appProperties.getAdminFile() != null, 
-			() -> FrameworkHelper.replacePath(appProperties.getAdminFile().trim()), 
-			() -> ""
-		);
-		Assert.hasLength(location, "adminFile required");
-		adminFile = Paths.get(location);
-		onReloadBean();
-		AdminHelper.prepareUI(this);
+	public Callable<AdminService> onConfigureBean(ApplicationContext applicationContext) {
+		AdminServiceImpl self = this;
+		return new Callable<AdminService>() {
+			@Override
+			public AdminService call() throws Exception {
+				self.applicationContext = applicationContext;
+				self.singletonHandler = applicationContext.getBean(SingletonHandler.class);
+				self.trxManagerInfo = applicationContext.getBean(EntityTrxManager.class).getDefaultTrxManagerInfo();
+				self.redis = applicationContext.getBean(Redis.class);
+				AppProperties.Multimedia multimedia = ObjectHelper.useOrDefault(appProperties.getMultimedia(), AppProperties.Multimedia::new);
+				AppProperties.AdminFile fileAdmin = ObjectHelper.useOrDefault(appProperties.getAdminFile(), AppProperties.AdminFile::new);
+				self.adminFile = Path.of(FrameworkHelper.replacePath(multimedia.getLocation().trim())  + "/" + fileAdmin.getName());
+				self.isAdminRedirect = Boolean.TRUE.equals(fileAdmin.getRedirect());
+				self.adminRedirectUrl = multimedia.getUrl() + "/" + fileAdmin.getName();
+				AdminHelper.prepareUI(self);
+				onReloadBean();
+				return self;
+			}
+		};
+	}
+
+	@Override
+	public boolean isBeanConfigured() {
+		return true;
 	}
 	
 	@Override
 	public boolean onReloadBean() throws Exception {
-		File file = adminFile.toFile();
-		if (file.isFile()) {
-			BasicFileAttributes attr = Files.readAttributes(adminFile, BasicFileAttributes.class);
-			adminBytes = Files.readAllBytes(adminFile);
-			adminVersion = attr.lastModifiedTime().toMillis() + "";
+		if (!AdminHelper.lock(this)) {
+			return false;
+		}
+		try {
+			AdminHelper.clear(this);
+			AdminHelper.reload(this);
+		} finally {
+			AdminHelper.unlock(this);
 		}
 		return true;
+	}
+	
+	@Override
+	public void onShutdownBean() {
+		AdminHelper.unlock(this);
 	}
 	
 	
@@ -109,15 +126,23 @@ class AdminServiceImpl implements AdminService, InitializingBean, BeanReload {
 	 */
 	@Override
 	public String getAdminVersion() {
-		return adminVersion;
+		return AdminHelper.version(this);
 	}
 	@Override
 	public byte[] getAdminBytes() {
-		return adminBytes;
+		return AdminHelper.bytes(this);
+	}
+	@Override
+	public boolean isAdminRedirect() {
+		return isAdminRedirect;
+	}
+	@Override
+	public String getAdminRedirectUrl() {
+		return adminRedirectUrl;
 	}
 	@Override
 	public void saveAdmin(byte[] bytes) {
-		AdminHelper.saveAdminFile(this, bytes);
+		AdminHelper.save(this, bytes);
 	}
 	
 	
@@ -143,7 +168,6 @@ class AdminServiceImpl implements AdminService, InitializingBean, BeanReload {
 		}
 	}
 	private List<String> getIcons(String type) {
-		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 		return trxManagerInfo.transaction(new SessionCallable<List<String>>() {
 			@Override
 			public List<String> call(Session session) throws Exception {
@@ -172,7 +196,6 @@ class AdminServiceImpl implements AdminService, InitializingBean, BeanReload {
 	public Page getProjects(Page inPage, String search, String order) {
 		Page page = Page.of(inPage);
 		Account account = ObjectHelper.useOrDefault(Access.get().getAccount(), Account::new);
-		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 		return trxManagerInfo.transaction(new SessionCallable<Page>() {
 			@Override
 			public Page call(Session session) throws Exception {
@@ -248,7 +271,6 @@ class AdminServiceImpl implements AdminService, InitializingBean, BeanReload {
 		Page page = Page.of(inPage);
 		Account account = ObjectHelper.useOrDefault(Access.get().getAccount(), Account::new);
 		Assert.hasLength(account.getAccountId(), "accountId required");
-		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 		return trxManagerInfo.transaction(new SessionCallable<Page>() {
 			@Override
 			public Page call(Session session) throws Exception {
@@ -307,7 +329,6 @@ class AdminServiceImpl implements AdminService, InitializingBean, BeanReload {
 	}
 	@Override
 	public Module getModule(AccountModuleId id) {
-		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 		Future<Module> ftModule = taskHandler.submit(() ->
 			trxManagerInfo.transaction((Session session) -> {
 				Object[] item = session.createQuery(

@@ -4,45 +4,40 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
-import net.ideahut.admin.central.AppConstants;
+import net.ideahut.admin.central.object.Redis;
 import net.ideahut.springboot.helper.ErrorHelper;
-import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.security.SecurityUser;
 
 @Service
 class TokenServiceImpl implements TokenService {
 	
-	private final DataMapper dataMapper;
-	private final RedisTemplate<String, byte[]> redisTemplate;
+	private final Redis redis;
 	
 	@Autowired
 	TokenServiceImpl(
-		DataMapper dataMapper,
-		RedisTemplate<String, byte[]> redisTemplate
+		Redis redis
 	) {
-		this.dataMapper = dataMapper;
-		this.redisTemplate = redisTemplate;
+		this.redis = redis;
 	}
 
 	@Override
 	public String create(SecurityUser user) {
-		ValueOperations<String, byte[]> operations = redisTemplate.opsForValue();
-		byte[] value = dataMapper.writeAsBytes(user, DataMapper.JSON);
+		ValueOperations<String, byte[]> operations = redis.getTemplate().opsForValue();
+		byte[] value = redis.getSerializer().serialize(SecurityUser.class, user);
 		String token = UUID.randomUUID().toString();
-		operations.set(AppConstants.Prefix.TOKEN + token, value, 300, TimeUnit.SECONDS);
+		operations.set(redis.getPrefix() + "TOKEN-" + token, value, 300, TimeUnit.SECONDS);
 		return token;
 	}
 
 	@Override
 	public SecurityUser getUser(String token) {
-		ValueOperations<String, byte[]> operations = redisTemplate.opsForValue();
-		byte[] value = operations.getAndDelete(AppConstants.Prefix.TOKEN + token);
+		ValueOperations<String, byte[]> operations = redis.getTemplate().opsForValue();
+		byte[] value = operations.getAndDelete(redis.getPrefix() + "TOKEN-" + token);
 		ErrorHelper.throwIf(value == null, "Token is not found");
-		return dataMapper.read(value, SecurityUser.class);
+		return redis.getSerializer().deserialize(SecurityUser.class, value);
 	}
 
 }

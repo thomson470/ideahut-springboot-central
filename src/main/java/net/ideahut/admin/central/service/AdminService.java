@@ -9,6 +9,8 @@ public interface AdminService {
 
 	String getAdminVersion();
 	byte[] getAdminBytes();
+	String getAdminRedirectUrl();
+	boolean isAdminRedirect();
 	void saveAdmin(byte[] bytes);
 	
 	void syncImages();

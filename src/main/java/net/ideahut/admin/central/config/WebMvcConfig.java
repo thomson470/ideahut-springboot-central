@@ -19,6 +19,7 @@ import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.helper.StringHelper;
 import net.ideahut.springboot.mapper.DataMapper;
+import net.ideahut.springboot.object.TimeValue;
 
 @Configuration
 @EnableWebMvc
@@ -77,18 +78,19 @@ class WebMvcConfig extends WebMvcBasicConfig {
 	 */
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		AppProperties.Web web = appProperties.getWeb();
+		AppProperties.Web web = ObjectHelper.useOrDefault(appProperties.getWeb(), AppProperties.Web::new);
 		String path = ObjectHelper.useOrDefault(web.getPath(), "").trim();
 		path = StringHelper.removeEnd(path, "/");
 		if (!registry.hasMappingForPattern(path + "/**")) {
+			TimeValue cacheMaxAge = ObjectHelper.useOrDefault(web.getCacheMaxAge(), () -> TimeValue.of(TimeUnit.MINUTES, 60L));
 			registry
 			.addResourceHandler(path + "/**")
 			.addResourceLocations("file:" + FrameworkHelper.replacePath(web.getLocation()))
-			.setCacheControl(CacheControl.maxAge(60, TimeUnit.DAYS))
-	        .resourceChain(false)
+			.setCacheControl(CacheControl.maxAge(cacheMaxAge.getValue(), cacheMaxAge.getUnit()))
+	        .resourceChain(Boolean.TRUE.equals(web.getResourceChain()))
 	        .addResolver(new VersionResourceResolver().addContentVersionStrategy(path + "/**"));
 		}
-		AppProperties.Multimedia multimedia = appProperties.getMultimedia();
+		AppProperties.Multimedia multimedia = ObjectHelper.useOrDefault(appProperties.getMultimedia(), AppProperties.Multimedia::new);
 		if (!registry.hasMappingForPattern(multimedia.getPath() + "/**")) {
 			registry
 			.addResourceHandler(multimedia.getPath() + "/**")

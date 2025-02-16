@@ -21,8 +21,8 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import jakarta.persistence.EntityManagerFactory;
-import net.ideahut.admin.central.AppConstants;
 import net.ideahut.admin.central.AppProperties;
+import net.ideahut.admin.central.Application;
 import net.ideahut.springboot.audit.AuditHandler;
 import net.ideahut.springboot.audit.DatabaseMultiAuditHandler;
 import net.ideahut.springboot.definition.DatabaseAuditDefinition;
@@ -49,7 +49,7 @@ class TrxManagerConfig {
 		return 
 		new PersistenceManagedTypesScanner(resourceLoader)
 		.scan(
-			AppConstants.PACKAGE + ".entity"
+			Application.Package.APPLICATION + ".entity"
 		);
 	}
 	

@@ -26,12 +26,16 @@
         <maven.compiler.source>17</maven.compiler.source>
         <java.version>17</java.version>
         
-        <start-class>net.ideahut.admin.central.Application</start-class>
+        <main-class>net.ideahut.admin.central.Application</main-class>
 		<version.exec-maven-plugin>3.2.0</version.exec-maven-plugin>
 
         <version.commons-io>2.17.0</version.commons-io>
         <version.jbcrypt>0.4</version.jbcrypt>
 		<version.apache-tika>2.9.2</version.apache-tika>
+		
+		<version.fury>0.9.0</version.fury>
+		<version.hessian>4.0.66</version.hessian>
+		<version.kryo5>5.6.2</version.kryo5>
         
 	</properties>
 
@@ -148,6 +152,35 @@
 			<artifactId>postgresql</artifactId>
 		</dependency>
 		
+		
+		<!-- KRYO -->
+		<dependency>
+		    <groupId>com.esotericsoftware.kryo</groupId>
+		    <artifactId>kryo5</artifactId>
+		    <version>${version.kryo5}</version>
+		</dependency>
+		
+		
+		<!-- HESSIAN -->
+		<dependency>
+		    <groupId>com.caucho</groupId>
+		    <artifactId>hessian</artifactId>
+		    <version>${version.hessian}</version>
+		</dependency>
+		
+		
+		<!-- FURY -->
+		<dependency>
+		    <groupId>org.apache.fury</groupId>
+		    <artifactId>fury-core</artifactId>
+		    <version>${version.fury}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.fury</groupId>
+		    <artifactId>fury-format</artifactId>
+		    <version>${version.fury}</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
@@ -155,63 +188,38 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.4.2</version>
 			</plugin>
 			
 			<plugin>
 				<groupId>org.graalvm.buildtools</groupId>
 				<artifactId>native-maven-plugin</artifactId>
+				<version>0.10.5</version>
 				<configuration>
 					<buildArgs>
+						
+						<buildArg>-Djava.awt.headless=true</buildArg>
+						<buildArg>-Dcom.oracle.graalvm.isaot=true</buildArg>
+						
 						<buildArg>--verbose</buildArg>
+						<buildArg>--install-exit-handlers</buildArg>
+						
+						<buildArg>-H:+UnlockExperimentalVMOptions</buildArg>
+						<buildArg>-H:+AddAllCharsets</buildArg>
+						<buildArg>-H:+IncludeAllLocales</buildArg>
 						<buildArg>-H:+ReportUnsupportedElementsAtRuntime</buildArg>
+						<buildArg>-H:+ReportExceptionStackTraces</buildArg>
+						<buildArg>-H:+PrintClassInitialization</buildArg>
+						<buildArg>-H:AdditionalSecurityProviders=sun.security.provider.Sun,sun.security.rsa.SunRsaSign,sun.security.ec.SunEC,sun.security.ssl.SunJSSE,com.sun.crypto.provider.SunJCE,sun.security.jgss.SunProvider,com.sun.security.sasl.Provider,org.jcp.xml.dsig.internal.dom.XMLDSigRI,sun.security.smartcardio.SunPCSC,sun.security.provider.certpath.ldap.JdkLDAP,com.sun.security.sasl.gsskerb.JdkSASL</buildArg>
+						
 					</buildArgs>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>${version.exec-maven-plugin}</version>
-				<executions>
-					<execution>
-						<id>java</id>
-						<goals>
-							<goal>java</goal>
-						</goals>
-						<configuration>
-							<mainClass>${start-class}</mainClass>
-						</configuration>
-					</execution>
-					<execution>
-						<id>java-agent</id>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>java</executable>
-							<workingDirectory>${project.build.directory}</workingDirectory>
-							<arguments>
-								<argument>-classpath</argument>
-								<classpath />
-								<argument>${start-class}</argument>
-							</arguments>
-						</configuration>
-					</execution>
-					<execution>
-						<id>native</id>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>${project.build.directory}/${project.artifactId}</executable>
-							<workingDirectory>${project.build.directory}</workingDirectory>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.13.0</version>
 				<configuration>
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.source}</target>
@@ -221,37 +229,14 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.4.2</version>
 				<configuration>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>${start-class}</mainClass>
+							<mainClass>${main-class}</mainClass>
 						</manifest>
 					</archive>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<mainClass>${start-class}</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
 				</configuration>
 			</plugin>
 			

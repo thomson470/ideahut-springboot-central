@@ -6,22 +6,28 @@ import net.ideahut.admin.central.entity.Project;
 import net.ideahut.admin.central.entity.Redirect;
 
 public enum View {
-	ACCOUNT		(Account.class),
-	PROJECT		(Project.class),
-	MODULE		(Module.class),
-	REDIRECT	(Redirect.class),
+	ACCOUNT		(Account.class, "account"),
+	PROJECT		(Project.class, "project"),
+	MODULE		(Module.class, "module"),
+	REDIRECT	(Redirect.class, "redirect"),
 	;
 	
 	private final Class<?> type;
+	private final String grid;
 	
-	View(Class<?> type) {
+	View(Class<?> type, String grid) {
 		this.type = type;
+		this.grid = grid;
 	}
 	
 	public Class<?> getType() {
 		return type;
 	}
 	
+	public String getGrid() {
+		return grid;
+	}
+
 	public static View of(Class<?> type) {
 		for (View view : View.values()) {
 			if (view.type.equals(type)) {

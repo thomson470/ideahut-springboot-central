@@ -11,10 +11,13 @@ import lombok.Getter;
 import lombok.Setter;
 import net.ideahut.springboot.definition.DatabaseAuditDefinition;
 import net.ideahut.springboot.definition.FilterDefinition;
+import net.ideahut.springboot.definition.FuryDefinition;
+import net.ideahut.springboot.definition.KryoDefinition;
 import net.ideahut.springboot.entity.EntityForeignKeyParam;
 import net.ideahut.springboot.helper.ErrorHelper;
 import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.helper.StringHelper;
+import net.ideahut.springboot.object.StorageKeyParam;
 import net.ideahut.springboot.object.TimeValue;
 import net.ideahut.springboot.redis.RedisProperties;
 import net.ideahut.springboot.task.TaskProperties;
@@ -27,7 +30,7 @@ public class AppProperties {
 	
 	private Boolean waitAllBeanConfigured;
 	private Boolean logAllError;
-	private String adminFile;
+	private String binarySerializer;
 	private Properties datasource;
 	private Properties hibernate;
 	private EntityForeignKeyParam foreignKey;
@@ -35,10 +38,12 @@ public class AppProperties {
 	private FilterDefinition filter;
 	private Expiry expiry;
 	private TaskProperties task;
-	private RedisProperties.Connection redis;
 	private Web web;
 	private Multimedia multimedia;
 	private Grid grid;
+	private Redis redis;
+	private Binary binary;
+	private AdminFile adminFile;
 	
 	
 	@Setter
@@ -53,6 +58,8 @@ public class AppProperties {
 		private String language;
 		private Boolean debug;
 		private Color color;
+		private TimeValue cacheMaxAge;
+		private Boolean resourceChain;
 	}
 	
 	@Getter
@@ -105,6 +112,27 @@ public class AppProperties {
 			dir.mkdir();
 			return dir;
 		}
+	}
+	
+	@Setter
+	@Getter
+	public static class Redis {
+		private StorageKeyParam storageKeyParam;
+		private RedisProperties.Connection connection;
+	}
+	
+	@Getter
+	@Setter
+	public static class Binary {
+		private KryoDefinition kryo;
+		private FuryDefinition fury;
+	}
+	
+	@Getter
+	@Setter
+	public static class AdminFile {
+		private Boolean redirect;
+		private String name;
 	}
 	
 }

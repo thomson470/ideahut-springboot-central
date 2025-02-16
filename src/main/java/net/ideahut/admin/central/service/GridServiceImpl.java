@@ -1,14 +1,17 @@
 package net.ideahut.admin.central.service;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,9 +22,12 @@ import net.ideahut.admin.central.AppProperties;
 import net.ideahut.admin.central.entity.Account;
 import net.ideahut.admin.central.entity.AccountView;
 import net.ideahut.admin.central.object.Access;
+import net.ideahut.admin.central.object.Redis;
 import net.ideahut.admin.central.object.View;
 import net.ideahut.admin.central.support.GridSupport;
+import net.ideahut.springboot.bean.BeanConfigure;
 import net.ideahut.springboot.bean.BeanReload;
+import net.ideahut.springboot.bean.BeanShutdown;
 import net.ideahut.springboot.crud.CrudAction;
 import net.ideahut.springboot.grid.GridAdditional;
 import net.ideahut.springboot.grid.GridOption;
@@ -31,80 +37,88 @@ import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.object.Option;
 
 @Service
-class GridServiceImpl implements GridService, InitializingBean, BeanReload {
+class GridServiceImpl implements 
+	GridService,
+	BeanReload,
+	BeanShutdown,
+	BeanConfigure<GridService>
+{
 	
 	private static class Strings {
 		private static final String OPTIONS = "options";
 		private static final String ADDITIONALS = "additionals";
-		
-		private static final String ACCOUNT = "account";
-		private static final String PROJECT = "project";
-		private static final String MODULE = "module";
-		private static final String REDIRECT = "redirect";
+	}
+	
+	private static class RedisKey {
+		static String lock(String redisPrefix) {
+			return redisPrefix + "GRID***LOCK";
+		}
+		static String grid(String redisPrefix, String name) {
+			return redisPrefix + "GRID-" + name;
+		}
 	}
 	
 	private final AppProperties appProperties;
-	private final ApplicationContext applicationContext;
-	private final DataMapper dataMapper;
+	private Redis redis;
+	private ApplicationContext applicationContext;
 	
 	@Autowired
 	GridServiceImpl(
-		AppProperties appProperties,
-		ApplicationContext applicationContext,
-		DataMapper dataMapper
+		AppProperties appProperties
 	) {
 		this.appProperties = appProperties;
-		this.applicationContext = applicationContext;
-		this.dataMapper = dataMapper;
 	}
 
-	private Map<String, ObjectNode> gridTemplates = new LinkedHashMap<>();
 	private Map<String, GridOption> gridOptions = new LinkedHashMap<>();
 	private Map<String, GridAdditional> gridAdditionals = new LinkedHashMap<>();
 	
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		onReloadBean();
+	public Callable<GridService> onConfigureBean(ApplicationContext applicationContext) {
+		GridServiceImpl self = this;
+		return new Callable<GridService>() {
+			@Override
+			public GridService call() throws Exception {
+				self.applicationContext = applicationContext;
+				self.redis = applicationContext.getBean(Redis.class);
+				onReloadBean();
+				return self;
+			}
+		};
+	}
+
+	@Override
+	public boolean isBeanConfigured() {
+		return true;
+	}
+
+	@Override
+	public void onShutdownBean() {
+		unlock();
 	}
 	
 	@Override
 	public boolean onReloadBean() throws Exception {
-		gridTemplates.clear();
-		gridOptions.clear();
-		gridAdditionals.clear();
-		AppProperties.Grid grid = appProperties.getGrid();
-		ObjectNode account = load(grid.getAccount());
-		ObjectHelper.runIf(
-			account != null, 
-			() -> gridTemplates.put(Strings.ACCOUNT, account)
-		);
-		ObjectNode project = load(grid.getProject());
-		ObjectHelper.runIf(
-			project != null, 
-			() -> gridTemplates.put(Strings.PROJECT, project)
-		);
-		ObjectNode module = load(grid.getModule());
-		ObjectHelper.runIf(
-			module != null, 
-			() -> gridTemplates.put(Strings.MODULE, module)
-		);
-		ObjectNode redirect = load(grid.getRedirect());
-		ObjectHelper.runIf(
-			redirect != null, 
-			() -> gridTemplates.put(Strings.REDIRECT, redirect)
-		);
-		gridOptions.putAll(GridSupport.getOptions());
-		gridAdditionals.putAll(GridSupport.getAdditionals());
+		if (!lock()) {
+			return false;
+		}
+		try {
+			clear();
+			reload();
+		} finally {
+			unlock();
+		}
 		return true;
 	}
 
 	@Override
 	public ObjectNode getGrid(String name) {
-		ObjectNode template = gridTemplates.get(name);
-		if (template == null) {
+		DataMapper dataMapper = FrameworkHelper.defaultDataMapper();
+		ValueOperations<String, byte[]> valops = redis.getTemplate().opsForValue();
+		byte[] bytes = valops.get(RedisKey.grid(redis.getPrefix(), name));
+		if (bytes == null) {
 			return dataMapper.createObjectNode();
 		}
-		ObjectNode grid = dataMapper.copy(template, ObjectNode.class);
+		ObjectNode grid = redis.getSerializer().deserialize(ObjectNode.class, bytes);
 		ObjectHelper.runIf(
 			grid.has(Strings.OPTIONS), 
 			() -> {
@@ -195,6 +209,74 @@ class GridServiceImpl implements GridService, InitializingBean, BeanReload {
 			}
 		);
 		return grid;
+	}
+	
+	private synchronized boolean lock() {
+		String key = RedisKey.lock(redis.getPrefix());
+		ValueOperations<String, byte[]> valops = redis.getTemplate().opsForValue();
+		byte[] bytes = valops.get(key);
+		if (bytes != null) {
+			return false;
+		}
+		valops.set(key, "1".getBytes());
+		return true;
+	}
+	
+	private void unlock() {
+		String key = RedisKey.lock(redis.getPrefix());
+		redis.getTemplate().delete(key);
+	}
+	
+	private void clear() {
+		redis.getTemplate().delete(Arrays.asList(
+			RedisKey.grid(redis.getPrefix(), View.ACCOUNT.getGrid()),
+			RedisKey.grid(redis.getPrefix(), View.MODULE.getGrid()),
+			RedisKey.grid(redis.getPrefix(), View.PROJECT.getGrid()),
+			RedisKey.grid(redis.getPrefix(), View.REDIRECT.getGrid())
+		));
+		gridOptions.clear();
+		gridAdditionals.clear();
+	}
+	
+	private void reload() throws Exception {
+		Map<String, byte[]> map = new HashMap<>();
+		AppProperties.Grid grid = appProperties.getGrid();
+		ObjectNode account = load(grid.getAccount());
+		ObjectHelper.runIf(
+			account != null, 
+			() -> map.put
+				(RedisKey.grid(redis.getPrefix(), View.ACCOUNT.getGrid()), 
+				redis.getSerializer().serialize(ObjectNode.class, account)
+			)
+		);
+		ObjectNode project = load(grid.getProject());
+		ObjectHelper.runIf(
+			project != null, 
+			() -> map.put
+				(RedisKey.grid(redis.getPrefix(), View.PROJECT.getGrid()), 
+				redis.getSerializer().serialize(ObjectNode.class, project)
+			)
+		);
+		ObjectNode module = load(grid.getModule());
+		ObjectHelper.runIf(
+			module != null, 
+			() -> map.put
+				(RedisKey.grid(redis.getPrefix(), View.MODULE.getGrid()), 
+				redis.getSerializer().serialize(ObjectNode.class, module)
+			)
+		);
+		ObjectNode redirect = load(grid.getRedirect());
+		ObjectHelper.runIf(
+			redirect != null, 
+			() -> map.put
+				(RedisKey.grid(redis.getPrefix(), View.REDIRECT.getGrid()), 
+				redis.getSerializer().serialize(ObjectNode.class, redirect)
+			)
+		);
+		gridOptions.putAll(GridSupport.getOptions());
+		gridAdditionals.putAll(GridSupport.getAdditionals());
+		ValueOperations<String, byte[]> valops = redis.getTemplate().opsForValue();
+		valops.multiSet(map);
 	}
 	
 	private ObjectNode load(String location) throws Exception {
