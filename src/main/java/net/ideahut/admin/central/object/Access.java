@@ -1,5 +1,7 @@
 package net.ideahut.admin.central.object;
 
+import java.io.Serializable;
+
 import org.springframework.beans.BeanUtils;
 
 import lombok.Getter;
@@ -9,7 +11,8 @@ import net.ideahut.springboot.context.RequestContext;
 
 @Setter
 @Getter
-public class Access {
+public class Access implements Serializable {
+	private static final long serialVersionUID = -8934761911825153331L;
 	
 	private String authorization;
 	private Account account;

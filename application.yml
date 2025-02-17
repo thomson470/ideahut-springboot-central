@@ -24,7 +24,7 @@ spring:
 config:
    waitAllBeanConfigured: true
    logAllError: true
-   binarySerializer: fury
+   binarySerializer: "hessian2"
    
    #
    # DATASOURCE

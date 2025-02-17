@@ -1,5 +1,7 @@
 package net.ideahut.admin.central.object;
 
+import java.io.Serializable;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -9,11 +11,12 @@ import net.ideahut.springboot.object.StorageKeyParam;
 import net.ideahut.springboot.serializer.BinarySerializer;
 
 @Getter
-public class Redis {
-
-	private final RedisTemplate<String, byte[]> template;
+public class Redis implements Serializable {
+	private static final long serialVersionUID = -3452080679991960286L;
+	
+	private final transient RedisTemplate<String, byte[]> template;
 	private final String prefix;
-	private final BinarySerializer serializer;
+	private final transient BinarySerializer serializer;
 	
 	private Redis(RedisTemplate<String, byte[]> template, String prefix, BinarySerializer serializer) {
 		this.template = template;

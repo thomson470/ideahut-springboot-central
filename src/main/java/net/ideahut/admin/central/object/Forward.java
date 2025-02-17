@@ -1,5 +1,6 @@
 package net.ideahut.admin.central.object;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,14 +15,16 @@ public class Forward {
 	
 	@Setter
 	@Getter
-	public static class Cookie {
-		 private String name;
-		 private String value;
-		 private String domain;
-		 private String maxAge;
-		 private String path;
-		 private Boolean secure;
-		 private Boolean httpOnly;
+	public static class Cookie implements Serializable {
+		private static final long serialVersionUID = 4032955945627466706L;
+		 
+		private String name;
+		private String value;
+		private String domain;
+		private String maxAge;
+		private String path;
+		private Boolean secure;
+		private Boolean httpOnly;
 	}
 	
 	private String action;

@@ -1,6 +1,15 @@
 {
   "reflection": [
     {
+      "type": "\u0001\u0004net.ideahut.admin.central.entity.AccountView"
+    },
+    {
+      "type": "Platform"
+    },
+    {
+      "type": "StringSerializer"
+    },
+    {
       "type": "[B"
     },
     {
@@ -46,7 +55,8 @@
       "type": "[Ljava.lang.Package;"
     },
     {
-      "type": "[Ljava.lang.String;"
+      "type": "[Ljava.lang.String;",
+      "allDeclaredFields": true
     },
     {
       "type": "[Ljava.lang.annotation.Annotation;"
@@ -67,7 +77,8 @@
       "type": "[Ljava.sql.Statement;"
     },
     {
-      "type": "[Ljava.util.HashMap$Node;"
+      "type": "[Ljava.util.HashMap$Node;",
+      "allDeclaredFields": true
     },
     {
       "type": "[Ljava.util.List;"
@@ -80,6 +91,10 @@
     },
     {
       "type": "[Ljavax.management.openmbean.CompositeData;"
+    },
+    {
+      "type": "[Lorg.hibernate.engine.spi.CompositeOwner;",
+      "allDeclaredFields": true
     },
     {
       "type": "[Lorg.hibernate.event.spi.AutoFlushEventListener;"
@@ -337,6 +352,70 @@
       "type": "com.atomikos.icatch.jta.UserTransactionManager"
     },
     {
+      "type": "com.caucho.burlap.io.BurlapRemoteObject"
+    },
+    {
+      "type": "com.caucho.hessian.io.BigDecimalDeserializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.caucho.hessian.io.FileDeserializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.caucho.hessian.io.HessianRemote",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.caucho.hessian.io.HessianRemoteObject"
+    },
+    {
+      "type": "com.caucho.hessian.io.LocaleSerializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.caucho.hessian.io.ObjectNameDeserializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.caucho.hessian.io.RemoteSerializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.caucho.hessian.io.StringValueSerializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "com.ctc.wstx.stax.WstxEventFactory"
     },
     {
@@ -344,6 +423,59 @@
     },
     {
       "type": "com.ctc.wstx.stax.WstxOutputFactory"
+    },
+    {
+      "type": "com.esotericsoftware.kryo.kryo5.Kryo"
+    },
+    {
+      "type": "com.esotericsoftware.kryo.kryo5.serializers.CollectionSerializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.esotericsoftware.kryo.kryo5.serializers.DefaultSerializers$ClassSerializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.esotericsoftware.kryo.kryo5.serializers.FieldSerializer"
+    },
+    {
+      "type": "com.esotericsoftware.kryo.kryo5.serializers.MapSerializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.esotericsoftware.kryo.kryo5.serializers.ReflectField"
+    },
+    {
+      "type": "com.esotericsoftware.kryo.kryo5.unsafe.UnsafeUtil",
+      "fields": [
+        {
+          "name": "unsafe"
+        }
+      ]
+    },
+    {
+      "type": "com.esotericsoftware.kryo.kryo5.util.DefaultClassResolver"
+    },
+    {
+      "type": "com.fasterxml"
+    },
+    {
+      "type": "com.fasterxml.jackson"
     },
     {
       "type": "com.fasterxml.jackson.annotation.JsonFormat"
@@ -361,7 +493,24 @@
       "type": "com.fasterxml.jackson.core.TreeCodec"
     },
     {
+      "type": "com.fasterxml.jackson.core.TreeNode"
+    },
+    {
       "type": "com.fasterxml.jackson.core.Versioned"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.JsonNode",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.JsonSerializable"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.JsonSerializable$Base",
+      "allDeclaredFields": true
     },
     {
       "type": "com.fasterxml.jackson.databind.Module"
@@ -380,6 +529,115 @@
     },
     {
       "type": "com.fasterxml.jackson.databind.module.SimpleModule"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.ArrayNode",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.BaseJsonNode",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "writeReplace",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.BooleanNode",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.Class"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.ContainerNode",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.ContainerNodeFuryAccessor_0"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.IntNode",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.JsonNodeCreator"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.JsonNodeFactory",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.NodeSerialization",
+      "allDeclaredFields": true,
+      "unsafeAllocated": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "readResolve",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.NodeSerializationHessianDeserializer"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.NodeSerializationHessianSerializer"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.NumericNode",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.Object"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.ObjectNode",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.ObjectNodeFuryAccessor_1"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.ObjectNodeFuryCodec_0",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.fury.Fury",
+            "java.lang.Class"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.ObjectNodeHessianSerializer"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.Override"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.String"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.TextNode",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.ValueNode",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.com"
     },
     {
       "type": "com.fasterxml.jackson.databind.ser.std.ClassSerializer",
@@ -431,6 +689,44 @@
     },
     {
       "type": "com.google.common.base.Optional"
+    },
+    {
+      "type": "com.google.common.base.internal.Finalizer",
+      "methods": [
+        {
+          "name": "startFinalizer",
+          "parameterTypes": [
+            "java.lang.Class",
+            "java.lang.ref.ReferenceQueue",
+            "java.lang.ref.PhantomReference"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.google.common.util.concurrent.AbstractFuture",
+      "fields": [
+        {
+          "name": "listeners"
+        },
+        {
+          "name": "value"
+        },
+        {
+          "name": "waiters"
+        }
+      ]
+    },
+    {
+      "type": "com.google.common.util.concurrent.AbstractFuture$Waiter",
+      "fields": [
+        {
+          "name": "next"
+        },
+        {
+          "name": "thread"
+        }
+      ]
     },
     {
       "type": "com.google.gson.Gson"
@@ -954,20 +1250,65 @@
       "type": "jakarta.xml.ws.WebServiceRef"
     },
     {
+      "type": "java$lang$com"
+    },
+    {
+      "type": "java$lang$net"
+    },
+    {
       "type": "java.io.Closeable"
     },
     {
       "type": "java.io.Console"
     },
     {
+      "type": "java.io.File"
+    },
+    {
       "type": "java.io.FilePermission"
     },
     {
-      "type": "java.io.FilterInputStream"
+      "type": "java.io.ObjectOutputStream"
+    },
+    {
+      "type": "java.io.ObjectStreamClass",
+      "fields": [
+        {
+          "name": "readResolveMethod"
+        },
+        {
+          "name": "writeReplaceMethod"
+        }
+      ]
     },
     {
       "type": "java.io.Serializable",
       "allDeclaredFields": true
+    },
+    {
+      "type": "java.lang$com"
+    },
+    {
+      "type": "java.lang$net"
+    },
+    {
+      "type": "java.lang.AbstractStringBuilder",
+      "methods": [
+        {
+          "name": "getCoder",
+          "parameterTypes": []
+        },
+        {
+          "name": "getValue",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "java.lang.Appendable"
+    },
+    {
+      "type": "java.lang.AssertionError"
     },
     {
       "type": "java.lang.AutoCloseable"
@@ -989,6 +1330,9 @@
       ]
     },
     {
+      "type": "java.lang.CharSequence"
+    },
+    {
       "type": "java.lang.Character",
       "allDeclaredFields": true,
       "fields": [
@@ -1004,8 +1348,15 @@
         {
           "name": "getModule",
           "parameterTypes": []
+        },
+        {
+          "name": "isRecord",
+          "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "java.lang.ClassHessianDeserializer"
     },
     {
       "type": "java.lang.ClassLoader",
@@ -1031,7 +1382,19 @@
     },
     {
       "type": "java.lang.Enum",
-      "allDeclaredFields": true
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "name",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "java.lang.Error"
+    },
+    {
+      "type": "java.lang.Exception"
     },
     {
       "type": "java.lang.Float",
@@ -1064,6 +1427,12 @@
       "type": "java.lang.Module",
       "methods": [
         {
+          "name": "addReads",
+          "parameterTypes": [
+            "java.lang.Module"
+          ]
+        },
+        {
           "name": "isExported",
           "parameterTypes": [
             "java.lang.String"
@@ -1081,7 +1450,16 @@
     },
     {
       "type": "java.lang.Object",
-      "allDeclaredFields": true
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "java.lang.Override"
     },
     {
       "type": "java.lang.Record"
@@ -1103,6 +1481,9 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "java.lang.RuntimeException"
     },
     {
       "type": "java.lang.RuntimePermission"
@@ -1127,13 +1508,41 @@
       ]
     },
     {
-      "type": "java.lang.StackTraceElement"
+      "type": "java.lang.StackTraceElement",
+      "allDeclaredFields": true
     },
     {
       "type": "java.lang.String",
+      "allDeclaredFields": true,
       "fields": [
         {
           "name": "TYPE"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "byte[]",
+            "byte"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "java.lang.StringBuffer"
+    },
+    {
+      "type": "java.lang.StringBuilder"
+    },
+    {
+      "type": "java.lang.StringCoding",
+      "methods": [
+        {
+          "name": "newStringLatin1",
+          "parameterTypes": [
+            "byte[]"
+          ]
         }
       ]
     },
@@ -1155,6 +1564,16 @@
       ],
       "methods": [
         {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.ThreadGroup",
+            "java.lang.Runnable",
+            "java.lang.String",
+            "long",
+            "boolean"
+          ]
+        },
+        {
           "name": "ofVirtual",
           "parameterTypes": []
         }
@@ -1173,6 +1592,14 @@
       ]
     },
     {
+      "type": "java.lang.Throwable",
+      "fields": [
+        {
+          "name": "detailMessage"
+        }
+      ]
+    },
+    {
       "type": "java.lang.Void",
       "fields": [
         {
@@ -1187,7 +1614,14 @@
       "type": "java.lang.annotation.Retention"
     },
     {
+      "type": "java.lang.annotation.RetentionPolicy",
+      "allDeclaredFields": true
+    },
+    {
       "type": "java.lang.annotation.Target"
+    },
+    {
+      "type": "java.lang.com"
     },
     {
       "type": "java.lang.constant.Constable",
@@ -1197,11 +1631,33 @@
       "type": "java.lang.foreign.MemorySegment"
     },
     {
-      "type": "java.lang.invoke.MethodHandles"
+      "type": "java.lang.invoke.MethodHandles",
+      "methods": [
+        {
+          "name": "privateLookupIn",
+          "parameterTypes": [
+            "java.lang.Class",
+            "java.lang.invoke.MethodHandles$Lookup"
+          ]
+        }
+      ]
     },
     {
       "type": "java.lang.invoke.MethodHandles$Lookup",
+      "fields": [
+        {
+          "name": "IMPL_LOOKUP"
+        }
+      ],
       "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Class",
+            "java.lang.Class",
+            "int"
+          ]
+        },
         {
           "name": "defineClass",
           "parameterTypes": [
@@ -1217,6 +1673,9 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "java.lang.invoke.SerializedLambda"
     },
     {
       "type": "java.lang.invoke.TypeDescriptor"
@@ -1270,6 +1729,9 @@
     },
     {
       "type": "java.lang.management.ThreadInfo"
+    },
+    {
+      "type": "java.lang.net"
     },
     {
       "type": "java.lang.reflect.AnnotatedArrayType"
@@ -1346,13 +1808,18 @@
           "parameterTypes": []
         },
         {
+          "name": "getOwnerType",
+          "parameterTypes": []
+        },
+        {
           "name": "getRawType",
           "parameterTypes": []
         }
       ]
     },
     {
-      "type": "java.lang.reflect.Proxy"
+      "type": "java.lang.reflect.Proxy",
+      "allDeclaredFields": true
     },
     {
       "type": "java.lang.reflect.RecordComponent"
@@ -1396,6 +1863,9 @@
       "type": "java.net.SocketPermission"
     },
     {
+      "type": "java.net.URLClassLoader"
+    },
+    {
       "type": "java.net.URLPermission",
       "methods": [
         {
@@ -1409,6 +1879,14 @@
     },
     {
       "type": "java.net.UnixDomainSocketAddress"
+    },
+    {
+      "type": "java.nio.Bits",
+      "fields": [
+        {
+          "name": "UNALIGNED"
+        }
+      ]
     },
     {
       "type": "java.nio.channels.ServerSocketChannel"
@@ -1460,6 +1938,9 @@
       ]
     },
     {
+      "type": "java.sql.Time"
+    },
+    {
       "type": "java.sql.Timestamp"
     },
     {
@@ -1470,12 +1951,60 @@
       "type": "java.sql.Wrapper"
     },
     {
+      "type": "java.time.Duration"
+    },
+    {
+      "type": "java.time.Instant"
+    },
+    {
+      "type": "java.time.LocalDate"
+    },
+    {
+      "type": "java.time.LocalDateTime"
+    },
+    {
+      "type": "java.time.LocalTime"
+    },
+    {
+      "type": "java.time.MonthDay"
+    },
+    {
+      "type": "java.time.OffsetDateTime"
+    },
+    {
+      "type": "java.time.OffsetTime"
+    },
+    {
+      "type": "java.time.Period"
+    },
+    {
+      "type": "java.time.Year"
+    },
+    {
+      "type": "java.time.YearMonth"
+    },
+    {
+      "type": "java.time.ZoneId"
+    },
+    {
+      "type": "java.time.ZoneOffset"
+    },
+    {
+      "type": "java.time.ZonedDateTime"
+    },
+    {
       "type": "java.util.AbstractCollection",
       "allDeclaredFields": true
     },
     {
       "type": "java.util.AbstractList",
       "allDeclaredFields": true
+    },
+    {
+      "type": "java.util.AbstractList$RandomAccessSubList"
+    },
+    {
+      "type": "java.util.AbstractList$SubList"
     },
     {
       "type": "java.util.AbstractMap",
@@ -1490,10 +2019,72 @@
       "allDeclaredFields": true
     },
     {
+      "type": "java.util.ArrayList$SubList"
+    },
+    {
+      "type": "java.util.Arrays$ArrayList",
+      "fields": [
+        {
+          "name": "a"
+        }
+      ]
+    },
+    {
       "type": "java.util.Collection"
     },
     {
+      "type": "java.util.Collections$SetFromMap",
+      "fields": [
+        {
+          "name": "m"
+        },
+        {
+          "name": "s"
+        }
+      ]
+    },
+    {
+      "type": "java.util.Collections$SynchronizedCollection",
+      "fields": [
+        {
+          "name": "c"
+        }
+      ]
+    },
+    {
+      "type": "java.util.Collections$SynchronizedMap",
+      "fields": [
+        {
+          "name": "m"
+        }
+      ]
+    },
+    {
+      "type": "java.util.Collections$UnmodifiableCollection",
+      "fields": [
+        {
+          "name": "c"
+        }
+      ]
+    },
+    {
+      "type": "java.util.Collections$UnmodifiableMap",
+      "fields": [
+        {
+          "name": "m"
+        }
+      ]
+    },
+    {
       "type": "java.util.Date"
+    },
+    {
+      "type": "java.util.EnumMap",
+      "fields": [
+        {
+          "name": "keyType"
+        }
+      ]
     },
     {
       "type": "java.util.Enumeration"
@@ -1510,14 +2101,99 @@
       "allDeclaredFields": true
     },
     {
-      "type": "java.util.LinkedHashMap",
-      "allDeclaredFields": true
+      "type": "java.util.ImmutableCollections"
     },
     {
-      "type": "java.util.List"
+      "type": "java.util.ImmutableCollections$List12"
+    },
+    {
+      "type": "java.util.ImmutableCollections$ListN"
+    },
+    {
+      "type": "java.util.ImmutableCollections$Map1",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Object",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "java.util.ImmutableCollections$MapN",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Object[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "java.util.ImmutableCollections$Set12"
+    },
+    {
+      "type": "java.util.ImmutableCollections$SetN"
+    },
+    {
+      "type": "java.util.ImmutableCollections$SubList"
+    },
+    {
+      "type": "java.util.Iterator"
+    },
+    {
+      "type": "java.util.LinkedHashMap",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "java.util.LinkedHashMapHessianDeserializer"
+    },
+    {
+      "type": "java.util.LinkedHashMapHessianSerializer"
+    },
+    {
+      "type": "java.util.List",
+      "methods": [
+        {
+          "name": "of",
+          "parameterTypes": [
+            "java.lang.Object[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "java.util.Locale"
     },
     {
       "type": "java.util.Map"
+    },
+    {
+      "type": "java.util.Map$Entry"
+    },
+    {
+      "type": "java.util.Map.Entry"
+    },
+    {
+      "type": "java.util.Optional"
+    },
+    {
+      "type": "java.util.OptionalDouble"
+    },
+    {
+      "type": "java.util.OptionalInt"
+    },
+    {
+      "type": "java.util.OptionalLong"
     },
     {
       "type": "java.util.Properties",
@@ -1544,16 +2220,63 @@
       "type": "java.util.RandomAccess"
     },
     {
+      "type": "java.util.RandomAccessSubList"
+    },
+    {
       "type": "java.util.SequencedMap"
     },
     {
-      "type": "java.util.Set"
+      "type": "java.util.Set",
+      "methods": [
+        {
+          "name": "of",
+          "parameterTypes": [
+            "java.lang.Object[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "java.util.SubList"
     },
     {
       "type": "java.util.concurrent.Callable"
     },
     {
+      "type": "java.util.concurrent.ConcurrentSkipListMap",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.util.Comparator"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "java.util.concurrent.ConcurrentSkipListSet",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.util.Comparator"
+          ]
+        }
+      ]
+    },
+    {
       "type": "java.util.concurrent.Executor"
+    },
+    {
+      "type": "java.util.concurrent.ForkJoinTask",
+      "fields": [
+        {
+          "name": "aux"
+        },
+        {
+          "name": "status"
+        }
+      ]
     },
     {
       "type": "java.util.concurrent.ThreadFactory"
@@ -1593,6 +2316,15 @@
       ]
     },
     {
+      "type": "java.util.function.BiFunction"
+    },
+    {
+      "type": "java.util.function.Function"
+    },
+    {
+      "type": "java.util.function.Supplier"
+    },
+    {
       "type": "java.util.logging.LogManager",
       "methods": [
         {
@@ -1612,9 +2344,6 @@
           "parameterTypes": []
         }
       ]
-    },
-    {
-      "type": "java.util.zip.ZipInputStream"
     },
     {
       "type": "javafx.beans.value.ObservableValue"
@@ -1717,6 +2446,9 @@
     },
     {
       "type": "kotlinx.serialization.protobuf.ProtoBuf"
+    },
+    {
+      "type": "net"
     },
     {
       "type": "net.bytebuddy.description.method.MethodDescription$InDefinedShape$AbstractBase$Executable"
@@ -1873,6 +2605,15 @@
       ]
     },
     {
+      "type": "net.ideahut"
+    },
+    {
+      "type": "net.ideahut.admin"
+    },
+    {
+      "type": "net.ideahut.admin.central"
+    },
+    {
       "type": "net.ideahut.admin.central.AppAdvice",
       "methods": [
         {
@@ -1888,6 +2629,10 @@
       "type": "net.ideahut.admin.central.AppProperties",
       "allDeclaredFields": true,
       "methods": [
+        {
+          "name": "getAdminFile",
+          "parameterTypes": []
+        },
         {
           "name": "getAudit",
           "parameterTypes": []
@@ -1935,13 +2680,19 @@
         {
           "name": "setAdminFile",
           "parameterTypes": [
-            "java.lang.String"
+            "net.ideahut.admin.central.AppProperties$AdminFile"
           ]
         },
         {
           "name": "setAudit",
           "parameterTypes": [
             "net.ideahut.springboot.definition.DatabaseAuditDefinition"
+          ]
+        },
+        {
+          "name": "setBinarySerializer",
+          "parameterTypes": [
+            "java.lang.String"
           ]
         },
         {
@@ -1995,7 +2746,7 @@
         {
           "name": "setRedis",
           "parameterTypes": [
-            "net.ideahut.springboot.redis.RedisProperties$Connection"
+            "net.ideahut.admin.central.AppProperties$Redis"
           ]
         },
         {
@@ -2031,6 +2782,28 @@
           "name": "CGLIB$SET_STATIC_CALLBACKS",
           "parameterTypes": [
             "org.springframework.cglib.proxy.Callback[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "net.ideahut.admin.central.AppProperties$AdminFile",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "setName",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setRedirect",
+          "parameterTypes": [
+            "java.lang.Boolean"
           ]
         }
       ]
@@ -2248,6 +3021,36 @@
       ]
     },
     {
+      "type": "net.ideahut.admin.central.AppProperties$Redis",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "getConnection",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStorageKeyParam",
+          "parameterTypes": []
+        },
+        {
+          "name": "setConnection",
+          "parameterTypes": [
+            "net.ideahut.springboot.redis.RedisProperties$Connection"
+          ]
+        },
+        {
+          "name": "setStorageKeyParam",
+          "parameterTypes": [
+            "net.ideahut.springboot.object.StorageKeyParam"
+          ]
+        }
+      ]
+    },
+    {
       "type": "net.ideahut.admin.central.AppProperties$Web",
       "allDeclaredFields": true,
       "methods": [
@@ -2260,6 +3063,10 @@
           "parameterTypes": []
         },
         {
+          "name": "getCacheMaxAge",
+          "parameterTypes": []
+        },
+        {
           "name": "getColor",
           "parameterTypes": []
         },
@@ -2267,6 +3074,12 @@
           "name": "setAllowedPaths",
           "parameterTypes": [
             "java.util.Set"
+          ]
+        },
+        {
+          "name": "setCacheMaxAge",
+          "parameterTypes": [
+            "net.ideahut.springboot.object.TimeValue"
           ]
         },
         {
@@ -2303,6 +3116,12 @@
           "name": "setRedirectParameter",
           "parameterTypes": [
             "java.lang.String"
+          ]
+        },
+        {
+          "name": "setResourceChain",
+          "parameterTypes": [
+            "java.lang.Boolean"
           ]
         },
         {
@@ -2656,8 +3475,12 @@
       ]
     },
     {
+      "type": "net.ideahut.admin.central.entity"
+    },
+    {
       "type": "net.ideahut.admin.central.entity.Account",
       "allDeclaredFields": true,
+      "unsafeAllocated": true,
       "methods": [
         {
           "name": "<init>",
@@ -2802,6 +3625,27 @@
       ]
     },
     {
+      "type": "net.ideahut.admin.central.entity.AccountFuryAccessor_2"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.AccountFuryCodec_0",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.fury.Fury",
+            "java.lang.Class"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.AccountHessianDeserializer"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.AccountHessianSerializer"
+    },
+    {
       "type": "net.ideahut.admin.central.entity.AccountModule",
       "allDeclaredFields": true,
       "methods": [
@@ -2920,6 +3764,7 @@
     {
       "type": "net.ideahut.admin.central.entity.AccountView",
       "allDeclaredFields": true,
+      "unsafeAllocated": true,
       "methods": [
         {
           "name": "<init>",
@@ -2988,8 +3833,30 @@
       ]
     },
     {
+      "type": "net.ideahut.admin.central.entity.AccountViewFuryAccessor_3"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.AccountViewFuryCodec_0",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.fury.Fury",
+            "java.lang.Class"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.AccountViewHessianDeserializer"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.AccountViewHessianSerializer"
+    },
+    {
       "type": "net.ideahut.admin.central.entity.AccountViewId",
       "allDeclaredFields": true,
+      "unsafeAllocated": true,
       "methods": [
         {
           "name": "<init>",
@@ -3018,6 +3885,27 @@
       ]
     },
     {
+      "type": "net.ideahut.admin.central.entity.AccountViewIdFuryAccessor_4"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.AccountViewIdFuryCodec_0",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.fury.Fury",
+            "java.lang.Class"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.AccountViewIdHessianDeserializer"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.AccountViewIdHessianSerializer"
+    },
+    {
       "type": "net.ideahut.admin.central.entity.AccountViewId_"
     },
     {
@@ -3025,6 +3913,15 @@
     },
     {
       "type": "net.ideahut.admin.central.entity.Account_"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.Character"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.Class"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.Long"
     },
     {
       "type": "net.ideahut.admin.central.entity.Module",
@@ -3220,6 +4117,12 @@
     },
     {
       "type": "net.ideahut.admin.central.entity.Module_"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.Object"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.Override"
     },
     {
       "type": "net.ideahut.admin.central.entity.Project",
@@ -3552,6 +4455,12 @@
       "type": "net.ideahut.admin.central.entity.Redirect_"
     },
     {
+      "type": "net.ideahut.admin.central.entity.String"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.net"
+    },
+    {
       "type": "net.ideahut.admin.central.entity.package-info"
     },
     {
@@ -3566,6 +4475,7 @@
     {
       "type": "net.ideahut.admin.central.object.Access",
       "allDeclaredFields": true,
+      "unsafeAllocated": true,
       "methods": [
         {
           "name": "<init>",
@@ -3592,6 +4502,27 @@
           ]
         }
       ]
+    },
+    {
+      "type": "net.ideahut.admin.central.object.AccessFuryCodec_0",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.fury.Fury",
+            "java.lang.Class"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "net.ideahut.admin.central.object.AccessHessianDeserializer"
+    },
+    {
+      "type": "net.ideahut.admin.central.object.AccessHessianSerializer"
+    },
+    {
+      "type": "net.ideahut.admin.central.object.Class"
     },
     {
       "type": "net.ideahut.admin.central.object.Forward",
@@ -3678,6 +4609,18 @@
       ]
     },
     {
+      "type": "net.ideahut.admin.central.object.Object"
+    },
+    {
+      "type": "net.ideahut.admin.central.object.Override"
+    },
+    {
+      "type": "net.ideahut.admin.central.object.Redis"
+    },
+    {
+      "type": "net.ideahut.admin.central.object.String"
+    },
+    {
       "type": "net.ideahut.admin.central.redirect.AdminRedirect",
       "methods": [
         {
@@ -3710,9 +4653,6 @@
     },
     {
       "type": "net.ideahut.admin.central.service.AccountServiceImpl"
-    },
-    {
-      "type": "net.ideahut.admin.central.service.AdminHelper"
     },
     {
       "type": "net.ideahut.admin.central.service.AdminService"
@@ -5519,6 +6459,186 @@
       ]
     },
     {
+      "type": "net.ideahut.springboot.definition.FuryDefinition",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "getAsyncCompilationEnabled",
+          "parameterTypes": []
+        },
+        {
+          "name": "getBasicTypesRefIgnored",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCheckClassVersion",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCheckJdkClassSerializable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCodeGenEnabled",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCompatibleMode",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCompressInt",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCompressString",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCopyRef",
+          "parameterTypes": []
+        },
+        {
+          "name": "getDeserializeNonexistentClass",
+          "parameterTypes": []
+        },
+        {
+          "name": "getDeserializeNonexistentEnumValueAsNull",
+          "parameterTypes": []
+        },
+        {
+          "name": "getDisableLogging",
+          "parameterTypes": []
+        },
+        {
+          "name": "getInstanceType",
+          "parameterTypes": []
+        },
+        {
+          "name": "getLanguage",
+          "parameterTypes": []
+        },
+        {
+          "name": "getLongEncoding",
+          "parameterTypes": []
+        },
+        {
+          "name": "getMaxPoolSize",
+          "parameterTypes": []
+        },
+        {
+          "name": "getMetaShareEnabled",
+          "parameterTypes": []
+        },
+        {
+          "name": "getMinPoolSize",
+          "parameterTypes": []
+        },
+        {
+          "name": "getName",
+          "parameterTypes": []
+        },
+        {
+          "name": "getPoolExpiry",
+          "parameterTypes": []
+        },
+        {
+          "name": "getRegisterGuavaTypes",
+          "parameterTypes": []
+        },
+        {
+          "name": "getRequireClassRegistration",
+          "parameterTypes": []
+        },
+        {
+          "name": "getScalaOptimizationEnabled",
+          "parameterTypes": []
+        },
+        {
+          "name": "getScopedMetaShareEnabled",
+          "parameterTypes": []
+        },
+        {
+          "name": "getSerializeEnumByName",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStrictJava",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStringRefIgnored",
+          "parameterTypes": []
+        },
+        {
+          "name": "getSuppressClassRegistrationWarnings",
+          "parameterTypes": []
+        },
+        {
+          "name": "getTimeRefIgnored",
+          "parameterTypes": []
+        },
+        {
+          "name": "getTrackingRef",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "net.ideahut.springboot.definition.KryoDefinition",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "getAutoReset",
+          "parameterTypes": []
+        },
+        {
+          "name": "getBufferSize",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCopyReferences",
+          "parameterTypes": []
+        },
+        {
+          "name": "getDefaultSerializerClass",
+          "parameterTypes": []
+        },
+        {
+          "name": "getMaxBufferSize",
+          "parameterTypes": []
+        },
+        {
+          "name": "getMaxDepth",
+          "parameterTypes": []
+        },
+        {
+          "name": "getOptimizedGenerics",
+          "parameterTypes": []
+        },
+        {
+          "name": "getReferences",
+          "parameterTypes": []
+        },
+        {
+          "name": "getRegistrationRequired",
+          "parameterTypes": []
+        },
+        {
+          "name": "getWarnUnregisteredClasses",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "net.ideahut.springboot.entity.DatabaseProperties",
       "allDeclaredFields": true,
       "methods": [
@@ -5837,6 +6957,9 @@
     },
     {
       "type": "net.ideahut.springboot.helper.ErrorHelper"
+    },
+    {
+      "type": "net.ideahut.springboot.helper.ObjectHelper"
     },
     {
       "type": "net.ideahut.springboot.init.InitEnum",
@@ -6592,6 +7715,12 @@
       ]
     },
     {
+      "type": "net.ideahut.springboot.object.StringMapHessianDeserializer"
+    },
+    {
+      "type": "net.ideahut.springboot.object.StringMapHessianSerializer"
+    },
+    {
       "type": "net.ideahut.springboot.object.StringSet",
       "allDeclaredFields": true,
       "methods": [
@@ -7274,8 +8403,18 @@
       ]
     },
     {
+      "type": "net.ideahut.springboot.security.Class"
+    },
+    {
+      "type": "net.ideahut.springboot.security.Object"
+    },
+    {
+      "type": "net.ideahut.springboot.security.Override"
+    },
+    {
       "type": "net.ideahut.springboot.security.SecurityUser",
       "allDeclaredFields": true,
+      "unsafeAllocated": true,
       "methods": [
         {
           "name": "<init>",
@@ -7310,6 +8449,48 @@
           ]
         }
       ]
+    },
+    {
+      "type": "net.ideahut.springboot.security.SecurityUserFuryCodec_0",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.fury.Fury",
+            "java.lang.Class"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "net.ideahut.springboot.security.SecurityUserHessianDeserializer"
+    },
+    {
+      "type": "net.ideahut.springboot.security.SecurityUserHessianSerializer"
+    },
+    {
+      "type": "net.ideahut.springboot.security.String"
+    },
+    {
+      "type": "net.ideahut.springboot.serializer.BinarySerializer"
+    },
+    {
+      "type": "net.ideahut.springboot.serializer.DataMapperBinarySerializer"
+    },
+    {
+      "type": "net.ideahut.springboot.serializer.FuryBinarySerializer"
+    },
+    {
+      "type": "net.ideahut.springboot.serializer.HessianBinarySerializer"
+    },
+    {
+      "type": "net.ideahut.springboot.serializer.JdkBinarySerializer"
+    },
+    {
+      "type": "net.ideahut.springboot.serializer.KryoBinarySerializer"
+    },
+    {
+      "type": "net.ideahut.springboot.serializer.SerializerManager"
     },
     {
       "type": "net.ideahut.springboot.singleton.SingletonHandler"
@@ -7621,6 +8802,298 @@
       ]
     },
     {
+      "type": "org.apache.fury.BaseFury"
+    },
+    {
+      "type": "org.apache.fury.Fury"
+    },
+    {
+      "type": "org.apache.fury.builder.Generated",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.builder.Generated$GeneratedCompatibleSerializer"
+    },
+    {
+      "type": "org.apache.fury.builder.Generated$GeneratedMetaSharedSerializer"
+    },
+    {
+      "type": "org.apache.fury.builder.Generated$GeneratedObjectSerializer",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.builder.Generated$GeneratedSerializer",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.builder.Generated.GeneratedObjectSerializer"
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$Arithmetic",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$Assign",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$BaseInvoke",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$BinaryOperator",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$BitAnd",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$Cast",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$Comparator",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$ForEach",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$ForLoop",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$If",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$Inlineable",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$Invoke",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$Literal",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$Null",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$Reference",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$Return",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$StaticInvoke",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.codegen.Expression$ValueExpression",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.collection.Tuple3"
+    },
+    {
+      "type": "org.apache.fury.memory.MemoryBuffer"
+    },
+    {
+      "type": "org.apache.fury.memory.Platform"
+    },
+    {
+      "type": "org.apache.fury.resolver.ClassInfo"
+    },
+    {
+      "type": "org.apache.fury.resolver.ClassInfoHolder"
+    },
+    {
+      "type": "org.apache.fury.resolver.ClassResolver"
+    },
+    {
+      "type": "org.apache.fury.resolver.NoRefResolver"
+    },
+    {
+      "type": "org.apache.fury.resolver.RefResolver"
+    },
+    {
+      "type": "org.apache.fury.serializer.AbstractObjectSerializer",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.serializer.AbstractObjectSerializer$FinalTypeField"
+    },
+    {
+      "type": "org.apache.fury.serializer.AbstractObjectSerializer$GenericTypeField"
+    },
+    {
+      "type": "org.apache.fury.serializer.AbstractObjectSerializer$InternalFieldInfo"
+    },
+    {
+      "type": "org.apache.fury.serializer.CodegenSerializer$LazyInitBeanSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.CodegenSerializer.LazyInitBeanSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.CompatibleSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.EnumSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.ExternalizableSerializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.fury.Fury",
+            "java.lang.Class"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.apache.fury.serializer.ImmutableSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.ObjectSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.ReplaceResolveSerializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.fury.Fury",
+            "java.lang.Class"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.apache.fury.serializer.ReplaceResolveSerializer$ReplaceStub",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializer",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$AbstractStringBuilderSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$AtomicBooleanSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$AtomicIntegerSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$AtomicLongSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$AtomicReferenceSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$BigDecimalSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$BigIntegerSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$CharsetSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$ClassSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$CrossLanguageCompatibleSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$CurrencySerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$EmptyObjectSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$RegexSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$StringBufferSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$StringBuilderSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$URISerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers$UUIDSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.Serializers.ClassSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.StringSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.collection.AbstractCollectionSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.collection.AbstractMapSerializer"
+    },
+    {
+      "type": "org.apache.fury.serializer.collection.ChildContainerSerializers$ChildMapSerializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.fury.Fury",
+            "java.lang.Class"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.apache.fury.shaded.org.codehaus.janino.ClassLoaderIClassLoader",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.shaded.org.codehaus.janino.IClassLoader",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.apache.fury.type.Descriptor"
+    },
+    {
+      "type": "org.apache.fury.type.DescriptorGrouper"
+    },
+    {
+      "type": "org.apache.fury.util.function.SerializableBiFunction"
+    },
+    {
+      "type": "org.apache.fury.util.function.SerializableFunction"
+    },
+    {
+      "type": "org.apache.fury.util.function.SerializableSupplier"
+    },
+    {
       "type": "org.apache.jasper.servlet.JspServlet"
     },
     {
@@ -7767,6 +9240,14 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "org.hibernate.bytecode.enhance.internal.tracker.CompositeOwnerTracker",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.hibernate.bytecode.enhance.internal.tracker.DirtyTracker",
+      "allDeclaredFields": true
     },
     {
       "type": "org.hibernate.bytecode.enhance.spi.EnhancementInfo"
@@ -8012,6 +9493,10 @@
       "type": "org.hibernate.engine.spi.CompositeTracker"
     },
     {
+      "type": "org.hibernate.engine.spi.EntityEntry",
+      "allDeclaredFields": true
+    },
+    {
       "type": "org.hibernate.engine.spi.Managed",
       "allDeclaredFields": true
     },
@@ -8024,6 +9509,10 @@
     },
     {
       "type": "org.hibernate.engine.spi.PersistentAttributeInterceptable",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "org.hibernate.engine.spi.PersistentAttributeInterceptor",
       "allDeclaredFields": true
     },
     {
@@ -8903,6 +10392,13 @@
       ]
     },
     {
+      "type": "org.springframework.boot.autoconfigure.netty.NettyAutoConfiguration"
+    },
+    {
+      "type": "org.springframework.boot.autoconfigure.netty.NettyProperties",
+      "allDeclaredFields": true
+    },
+    {
       "type": "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration"
     },
     {
@@ -9431,6 +10927,9 @@
     },
     {
       "type": "org.springframework.boot.loader.launch.LaunchedClassLoader"
+    },
+    {
+      "type": "org.springframework.boot.loader.net.protocol.jar.JarUrlClassLoader"
     },
     {
       "type": "org.springframework.boot.logging.LogLevelEditor"
@@ -10210,6 +11709,9 @@
       "type": "org.springframework.util.AntPathMatcher"
     },
     {
+      "type": "org.springframework.util.Assert"
+    },
+    {
       "type": "org.springframework.util.CustomizableThreadCreator"
     },
     {
@@ -10349,6 +11851,9 @@
     },
     {
       "type": "org.springframework.web.servlet.HandlerExceptionResolver"
+    },
+    {
+      "type": "org.springframework.web.servlet.HandlerExecutionChain"
     },
     {
       "type": "org.springframework.web.servlet.HandlerInterceptor"
@@ -10546,6 +12051,26 @@
       "type": "sun.management.RuntimeImpl"
     },
     {
+      "type": "sun.misc.Unsafe",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "sun.reflect.ReflectionFactory",
+      "methods": [
+        {
+          "name": "getReflectionFactory",
+          "parameterTypes": []
+        },
+        {
+          "name": "newConstructorForSerialization",
+          "parameterTypes": [
+            "java.lang.Class",
+            "java.lang.reflect.Constructor"
+          ]
+        }
+      ]
+    },
+    {
       "type": "sun.security.pkcs12.PKCS12KeyStore",
       "methods": [
         {
@@ -10574,6 +12099,15 @@
     },
     {
       "type": "sun.security.provider.DSA$SHA256withDSA",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.MD5",
       "methods": [
         {
           "name": "<init>",
@@ -10863,6 +12397,22 @@
       "type": "void"
     },
     {
+      "type": "��\u0001Y��\u0001Y��\u0001Y��\u0001\u0005net.ideahut.admin.central.entity.AccountViewId"
+    },
+    {
+      "type": {
+        "proxy": [
+          "java.lang.annotation.Retention"
+        ]
+      },
+      "methods": [
+        {
+          "name": "value",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": {
         "proxy": [
           "java.lang.reflect.GenericArrayType",
@@ -11095,6 +12645,12 @@
       "glob": ""
     },
     {
+      "glob": "META-INF/hessian/deserializers"
+    },
+    {
+      "glob": "META-INF/hessian/serializers"
+    },
+    {
       "glob": "META-INF/orm.xml"
     },
     {
@@ -11272,6 +12828,9 @@
       "glob": "application.yml"
     },
     {
+      "glob": "com/google/common/base/internal/Finalizer.class"
+    },
+    {
       "glob": "config/application-default.properties"
     },
     {
@@ -11300,6 +12859,9 @@
     },
     {
       "glob": "data.sql"
+    },
+    {
+      "glob": "fury/disallowed.txt"
     },
     {
       "glob": "hibernate.properties"
@@ -11740,6 +13302,130 @@
       "locales": [
         "en-ID"
       ]
+    }
+  ],
+  "serialization": [
+    {
+      "type": "com.fasterxml.jackson.databind.node.BaseJsonNode"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.ContainerNode"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.NodeSerialization"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.node.ObjectNode"
+    },
+    {
+      "type": "java.io.IOException"
+    },
+    {
+      "type": "java.io.NotSerializableException"
+    },
+    {
+      "type": "java.io.ObjectStreamException"
+    },
+    {
+      "type": "java.lang.Character"
+    },
+    {
+      "type": "java.lang.Exception"
+    },
+    {
+      "type": "java.lang.Long"
+    },
+    {
+      "type": "java.lang.Number"
+    },
+    {
+      "type": "java.lang.StackTraceElement"
+    },
+    {
+      "type": "java.lang.StackTraceElement[]"
+    },
+    {
+      "type": "java.lang.String"
+    },
+    {
+      "type": "java.lang.Throwable"
+    },
+    {
+      "type": "java.lang.invoke.SerializedLambda"
+    },
+    {
+      "type": "java.util.Collections$EmptyList"
+    },
+    {
+      "type": "java.util.HashMap"
+    },
+    {
+      "type": "java.util.LinkedHashMap"
+    },
+    {
+      "type": "java.util.LinkedHashMap",
+      "customTargetConstructorClass": "java.lang.Object"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.Account"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.Account",
+      "customTargetConstructorClass": "java.lang.Object"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.AccountModule"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.AccountView"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.AccountViewId"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.Module"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.ModuleConfiguration"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.Project"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.ProjectModule"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.Redirect"
+    },
+    {
+      "type": "net.ideahut.admin.central.entity.RedirectParameter"
+    },
+    {
+      "type": "net.ideahut.admin.central.object.Access"
+    },
+    {
+      "type": "net.ideahut.admin.central.object.Access",
+      "customTargetConstructorClass": "java.lang.Object"
+    },
+    {
+      "type": "net.ideahut.springboot.entity.EntityAudit"
+    },
+    {
+      "type": "net.ideahut.springboot.entity.EntityBase"
+    },
+    {
+      "type": "net.ideahut.springboot.object.StringMap"
+    },
+    {
+      "type": "net.ideahut.springboot.object.StringMap",
+      "customTargetConstructorClass": "java.lang.Object"
+    },
+    {
+      "type": "net.ideahut.springboot.security.SecurityUser"
+    },
+    {
+      "type": "net.ideahut.springboot.security.SecurityUser",
+      "customTargetConstructorClass": "java.lang.Object"
     }
   ],
   "jni": [
