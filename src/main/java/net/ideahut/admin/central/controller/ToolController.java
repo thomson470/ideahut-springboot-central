@@ -136,7 +136,7 @@ class ToolController implements InitializingBean {
 	String bcryptGenerate(
 		@RequestParam(name = "round", required = false) Integer round,
 		@RequestParam("password") String password
-	) throws Exception {
+	) {
 		String salt;
 		if (round != null && round > 0) {
 			salt = BCrypt.gensalt(round);
@@ -153,7 +153,7 @@ class ToolController implements InitializingBean {
 	Boolean bcryptCheck(
 		@RequestParam("password") String password,
 		@RequestParam("hash") String hash
-	) throws Exception {
+	) {
 		return BCrypt.checkpw(password, hash);
 	}
 	
@@ -164,7 +164,7 @@ class ToolController implements InitializingBean {
 	String passwordEncrypt(
 		@RequestParam(name = "factor", required = false) Integer factor,
 		@RequestParam("password") String password
-	) throws Exception {
+	) {
 		return FrameworkHelper.encryptToBase64(password, factor);
 	}
 	

@@ -125,7 +125,7 @@ class ModuleController implements InitializingBean {
 	@DeleteMapping(value = "/delete")
 	Module delete(
 		@RequestParam("moduleId") String moduleId
-	) throws Exception {
+	) {
 		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 		Module module = CrudBuilder.of(crudHandler, trxManagerInfo, Module.class)
 		.setId(moduleId).delete();

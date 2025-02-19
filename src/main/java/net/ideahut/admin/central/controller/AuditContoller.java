@@ -32,7 +32,7 @@ class AuditContoller {
 	@GetMapping(value = "/info")
 	AuditAccessible.AuditMember info(
 		@RequestParam("type") String type
-	) throws Exception {
+	) {
 		AuditAccessible accessible = auditHandler.getAccessibles().values().iterator().next();
 		return accessible.getMembers().get(ObjectHelper.classOf(type));
 	}
