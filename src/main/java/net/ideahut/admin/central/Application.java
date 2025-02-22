@@ -113,13 +113,23 @@ public class Application extends SpringBootServletInitializer implements Applica
 	
 	private void runInit(TaskHandler taskHandler, ApplicationContext applicationContext) {
 		taskHandler.execute(() -> {
+			InitHandler initHandler;
 			try {
-				InitHandler initHandler = applicationContext.getBean(InitHandler.class);
+				initHandler = applicationContext.getBean(InitHandler.class);
+			} catch (Exception e) {
+				log.warn("InitHandler", e);
+				return;
+			}
+			try {
 				initHandler.initMapper(applicationContext);
+			} catch (Exception e) {
+				log.warn("InitMapper", e);
+			}
+			try {
 				initHandler.initValidation();
 				initHandler.initServlet();
 			} catch (Exception e) {
-				log.warn("InitHandler", e);
+				log.warn("InitServlet", e);
 			}
 		});
 	}
