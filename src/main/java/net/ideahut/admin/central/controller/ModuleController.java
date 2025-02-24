@@ -26,8 +26,7 @@ import net.ideahut.springboot.entity.EntityInfo;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.entity.TrxManagerInfo;
 import net.ideahut.springboot.exception.ResultRuntimeException;
-import net.ideahut.springboot.helper.ErrorHelper;
-import net.ideahut.springboot.object.Multimedia;
+import net.ideahut.springboot.object.ImageScalr;
 import net.ideahut.springboot.object.Result;
 
 @ComponentScan
@@ -65,9 +64,11 @@ class ModuleController implements InitializingBean {
 		@ModelAttribute Module module,
 		@RequestParam(name = "file", required = false) MultipartFile file
 	) throws Exception {
-		Multimedia multimedia = getMultimedia(file);
-		if (multimedia != null) {
-			module.setIcon("/" + PATH + "/" + UUID.randomUUID().toString() + "." + multimedia.getExtention());
+		byte[] iconBytes = null;
+		if (file != null) {
+			ImageScalr imageScalr = ImageScalr.of(file.getInputStream());
+			iconBytes = ImageScalr.toByteArray(imageScalr.resize(480), imageScalr.getFormat());
+			module.setIcon("/" + PATH + "/" + UUID.randomUUID().toString() + "." + imageScalr.getFormat().toLowerCase());
 		}
 		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 		CrudBuilder builder = CrudBuilder.of(crudHandler, trxManagerInfo, Module.class)
@@ -76,8 +77,8 @@ class ModuleController implements InitializingBean {
 		if (result.getError() != null) {
 			throw ResultRuntimeException.of(Result.error(result.getError()));
 		}
-		if (multimedia != null) {
-			FileUtils.writeByteArrayToFile(new File(directory, module.getIcon().substring(PATH.length() + 1)), multimedia.getBytes());
+		if (iconBytes != null) {
+			FileUtils.writeByteArrayToFile(new File(directory, module.getIcon().substring(PATH.length() + 1)), iconBytes);
 		}
 		return result.getValue();
 	}
@@ -88,7 +89,6 @@ class ModuleController implements InitializingBean {
 		@ModelAttribute Module input,
 		@RequestParam(name = "file", required = false) MultipartFile file
 	) throws Exception {
-		Multimedia multimedia = getMultimedia(file);
 		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 		EntityInfo entityInfo = trxManagerInfo.getEntityInfo(Module.class);
 		Module module = CrudBuilder.of(crudHandler, entityInfo)
@@ -96,9 +96,12 @@ class ModuleController implements InitializingBean {
 		Assert.notNull(module, "Module not found");
 		String oldIcon = null;
 		String newIcon = null;
-		if (multimedia != null) {
+		byte[] iconBytes = null;
+		if (file != null) {
+			ImageScalr imageScalr = ImageScalr.of(file.getInputStream());
+			iconBytes = ImageScalr.toByteArray(imageScalr.resize(480), imageScalr.getFormat());
 			oldIcon = module.getIcon() != null ? module.getIcon() : null;
-			newIcon = "/"+ PATH + "/" + UUID.randomUUID().toString() + "." + multimedia.getExtention();
+			newIcon = "/"+ PATH + "/" + UUID.randomUUID().toString() + "." + imageScalr.getFormat().toLowerCase();
 		}
 		if (entityInfo.merge(input, module, false, Arrays.asList("icon"))) {
 			if (newIcon != null) {
@@ -111,8 +114,8 @@ class ModuleController implements InitializingBean {
 			if (result.getError() != null) {
 				throw ResultRuntimeException.of(Result.error(result.getError()));
 			}
-			if (multimedia != null) {
-				FileUtils.writeByteArrayToFile(new File(directory, module.getIcon().substring(PATH.length() + 1)), multimedia.getBytes());
+			if (iconBytes != null) {
+				FileUtils.writeByteArrayToFile(new File(directory, module.getIcon().substring(PATH.length() + 1)), iconBytes);
 				if (oldIcon != null) {
 					FileUtils.deleteQuietly(new File(directory, oldIcon.substring(PATH.length() + 1)));
 				}
@@ -134,18 +137,5 @@ class ModuleController implements InitializingBean {
 		}
 		return module;
 	}
-
-	
-	private Multimedia getMultimedia(MultipartFile file) throws Exception {
-		Multimedia multimedia = null;
-		if (file != null) {
-			multimedia = Multimedia.of(file.getBytes()).setWidth(480);
-			if (Multimedia.IMAGE != multimedia.getType()) {
-				throw ErrorHelper.exception("Invalid image");
-			}
-		}
-		return multimedia;
-	}
-	
 	
 }

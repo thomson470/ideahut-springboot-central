@@ -31,7 +31,7 @@
 
         <version.commons-io>2.17.0</version.commons-io>
         <version.jbcrypt>0.4</version.jbcrypt>
-		<version.apache-tika>2.9.2</version.apache-tika>
+		<version.imgscalr>4.2</version.imgscalr>
 		<version.hessian>4.0.66</version.hessian>
         
 	</properties>
@@ -83,12 +83,11 @@
 		</dependency>
 		
 		
-		<!-- APACHE TIKA -->
+		<!-- IMGSCALR -->
 		<dependency>
-		    <groupId>org.apache.tika</groupId>
-		    <artifactId>tika-core</artifactId>
-		    <version>${version.apache-tika}</version>
-		    <optional>true</optional>
+			<groupId>org.imgscalr</groupId>
+			<artifactId>imgscalr-lib</artifactId>
+			<version>${version.imgscalr}</version>
 		</dependency>
 
 

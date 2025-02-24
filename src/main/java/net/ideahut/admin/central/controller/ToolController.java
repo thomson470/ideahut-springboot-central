@@ -26,7 +26,7 @@ import net.ideahut.admin.central.service.AdminService;
 import net.ideahut.springboot.helper.ErrorHelper;
 import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.helper.ObjectHelper;
-import net.ideahut.springboot.object.Multimedia;
+import net.ideahut.springboot.object.ImageScalr;
 import net.ideahut.springboot.object.Option;
 import net.ideahut.springboot.object.Result;
 
@@ -99,13 +99,11 @@ class ToolController implements InitializingBean {
 		ErrorHelper.throwIf(!ObjectHelper.isTrue(account.getEnableImageUpload()), Strings.USER_NOT_ALLOWED);
 		File directory = directories.get(type);
 		ErrorHelper.throwIf(directory == null, "Invalid type: " + type);
-		Multimedia multimedia = Multimedia.of(file.getBytes()).setWidth(480);
-		if (Multimedia.IMAGE != multimedia.getType()) {
-			throw ErrorHelper.exception("Invalid image");
-		}
-		String image = UUID.randomUUID().toString() + "." + multimedia.getExtention();
-		FileUtils.writeByteArrayToFile(new File(directory, image), multimedia.getBytes());
-		return "/"+ type + "/" + image;
+		ImageScalr imageScalr = ImageScalr.of(file.getInputStream());
+		byte[] fileBytes = ImageScalr.toByteArray(imageScalr.resize(480), imageScalr.getFormat());
+		String fileName = UUID.randomUUID().toString() + "." + imageScalr.getFormat().toLowerCase();
+		FileUtils.writeByteArrayToFile(new File(directory, fileName), fileBytes);
+		return "/"+ type + "/" + fileName;
 	}
 	
 	/*

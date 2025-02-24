@@ -27,7 +27,7 @@ import net.ideahut.springboot.helper.WebMvcHelper;
 
 @Component
 @ComponentScan
-class RequestInterceptor implements HandlerInterceptor {
+class RequestHandlerInterceptor implements HandlerInterceptor {
 	
 	private static class Strings {
 		private static final String SLASH = new StringBuilder("/").toString();
@@ -38,7 +38,7 @@ class RequestInterceptor implements HandlerInterceptor {
 	private final String webPath;
 	
 	@Autowired
-	RequestInterceptor(
+	RequestHandlerInterceptor(
 		AppProperties appProperties,
 		AccessService accessService	
 	) {
