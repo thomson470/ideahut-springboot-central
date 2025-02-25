@@ -32,10 +32,8 @@ import net.ideahut.springboot.redis.RedisHelper;
 import net.ideahut.springboot.redis.RedisProperties;
 import net.ideahut.springboot.serializer.BinarySerializer;
 import net.ideahut.springboot.serializer.DataMapperBinarySerializer;
-import net.ideahut.springboot.serializer.FuryBinarySerializer;
 import net.ideahut.springboot.serializer.HessianBinarySerializer;
 import net.ideahut.springboot.serializer.JdkBinarySerializer;
-import net.ideahut.springboot.serializer.KryoBinarySerializer;
 import net.ideahut.springboot.singleton.SingletonHandler;
 import net.ideahut.springboot.singleton.SingletonHandlerImpl;
 import net.ideahut.springboot.task.TaskHandler;
@@ -62,19 +60,12 @@ class CommonConfig {
 		AppProperties appProperties,
 		DataMapper dataMapper
 	) {
-		AppProperties.Binary binary = ObjectHelper.useOrDefault(appProperties.getBinary(), AppProperties.Binary::new);
 		String code = ObjectHelper.useOrDefault(appProperties.getBinarySerializer(), "").trim().toLowerCase();
 		if ("xml".equals(code)) {
 			return new DataMapperBinarySerializer().setMapper(dataMapper).setFormat(DataMapper.XML);
 		}
 		else if ("jdk".equals(code)) {
 			return new JdkBinarySerializer();
-		}
-		else if ("fury".equals(code)) {
-			return new FuryBinarySerializer(binary.getFury());
-		}
-		else if ("kryo".equals(code)) {
-			return new KryoBinarySerializer(binary.getKryo());
 		}
 		else if ("hessian1".equals(code)) {
 			return new HessianBinarySerializer().setVersion(1);

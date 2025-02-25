@@ -11,8 +11,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.ideahut.springboot.definition.DatabaseAuditDefinition;
 import net.ideahut.springboot.definition.FilterDefinition;
-import net.ideahut.springboot.definition.FuryDefinition;
-import net.ideahut.springboot.definition.KryoDefinition;
 import net.ideahut.springboot.entity.EntityForeignKeyParam;
 import net.ideahut.springboot.helper.ErrorHelper;
 import net.ideahut.springboot.helper.FrameworkHelper;
@@ -42,7 +40,6 @@ public class AppProperties {
 	private Multimedia multimedia;
 	private Grid grid;
 	private Redis redis;
-	private Binary binary;
 	private AdminFile adminFile;
 	
 	
@@ -119,13 +116,6 @@ public class AppProperties {
 	public static class Redis {
 		private StorageKeyParam storageKeyParam;
 		private RedisProperties.Connection connection;
-	}
-	
-	@Getter
-	@Setter
-	public static class Binary {
-		private KryoDefinition kryo;
-		private FuryDefinition fury;
 	}
 	
 	@Getter

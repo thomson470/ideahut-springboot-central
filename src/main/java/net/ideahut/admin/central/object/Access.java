@@ -5,17 +5,25 @@ import java.io.Serializable;
 import org.springframework.beans.BeanUtils;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.ideahut.admin.central.entity.Account;
 import net.ideahut.springboot.context.RequestContext;
 
-@Setter
 @Getter
 public class Access implements Serializable {
 	private static final long serialVersionUID = -8934761911825153331L;
 	
 	private String authorization;
 	private Account account;
+	
+	public Access setAuthorization(String authorization) {
+		this.authorization = authorization;
+		return this;
+	}
+
+	public Access setAccount(Account account) {
+		this.account = account;
+		return this;
+	}
 	
 	public Access forView() {
 		Access access = new Access();
@@ -40,7 +48,7 @@ public class Access implements Serializable {
 	}
 	
 	public static Access get() {
-		return RequestContext.currentContext().getAttribute(Access.class.getName(), new Access());
+		return RequestContext.currentContext().getAttribute(Access.class.getName(), Access::new);
 	}
 	
 	public static Access set(Access access) {

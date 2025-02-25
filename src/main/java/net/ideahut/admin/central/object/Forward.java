@@ -2,49 +2,58 @@ package net.ideahut.admin.central.object;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import lombok.Getter;
-import lombok.Setter;
+import net.ideahut.springboot.object.StringMap;
 
-@Setter
 @Getter
-public class Forward {
-	
-	@Setter
-	@Getter
-	public static class Cookie implements Serializable {
-		private static final long serialVersionUID = 4032955945627466706L;
-		 
-		private String name;
-		private String value;
-		private String domain;
-		private String maxAge;
-		private String path;
-		private Boolean secure;
-		private Boolean httpOnly;
-	}
+public class Forward implements Serializable {
+	private static final long serialVersionUID = -5344648877204941644L;
 	
 	private String action;
 	private String method;
-	private Map<String, String> parameters;
+	private StringMap parameters;
 	private List<Cookie> cookies;
 	
-	public Forward setParameter(String name, String value) {
-		if (parameters == null) {
-			parameters = new LinkedHashMap<>();
+	public Forward setAction(String action) {
+		this.action = action;
+		return this;
+	}
+
+	public Forward setMethod(String method) {
+		this.method = method;
+		return this;
+	}
+
+	public Forward setParameters(StringMap parameters) {
+		this.parameters = parameters;
+		return this;
+	}
+	
+	public Forward putParameter(String name, String value) {
+		if (name != null) {
+			if (parameters == null) {
+				parameters = new StringMap();
+			}
+			parameters.put(name, value);
 		}
-		parameters.put(name, value);
+		return this;
+	}
+
+	public Forward setCookies(List<Cookie> cookies) {
+		this.cookies = cookies;
 		return this;
 	}
 	
 	public Forward addCookie(Cookie cookie) {
-		if (cookies == null) {
-			cookies = new ArrayList<>();
+		if (cookie != null) {
+			if (cookies == null) {
+				cookies = new ArrayList<>();
+			}
+			cookies.add(cookie);
 		}
-		cookies.add(cookie);
 		return this;
 	}
+	
 }

@@ -612,15 +612,6 @@
       ]
     },
     {
-      "type": "com.sun.crypto.provider.DHParameters",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
       "type": "com.sun.crypto.provider.GaloisCounterMode$AESGCM",
       "methods": [
         {
@@ -640,15 +631,6 @@
     },
     {
       "type": "com.sun.crypto.provider.PBKDF2Core$HmacSHA256",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "com.sun.crypto.provider.TlsMasterSecretGenerator",
       "methods": [
         {
           "name": "<init>",
@@ -685,15 +667,6 @@
     },
     {
       "type": "com.sun.management.internal.OperatingSystemImpl"
-    },
-    {
-      "type": "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
     },
     {
       "type": "com.zaxxer.hikari.HikariConfig",
@@ -1567,9 +1540,6 @@
     },
     {
       "type": "java.security.SecurityPermission"
-    },
-    {
-      "type": "java.security.cert.CertificateFactory"
     },
     {
       "type": "java.sql.Date"
@@ -3878,6 +3848,40 @@
       "type": "net.ideahut.admin.central.object.AccessHessianSerializer"
     },
     {
+      "type": "net.ideahut.admin.central.object.Cookie",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "getDomain",
+          "parameterTypes": []
+        },
+        {
+          "name": "getHttpOnly",
+          "parameterTypes": []
+        },
+        {
+          "name": "getMaxAge",
+          "parameterTypes": []
+        },
+        {
+          "name": "getName",
+          "parameterTypes": []
+        },
+        {
+          "name": "getPath",
+          "parameterTypes": []
+        },
+        {
+          "name": "getSecure",
+          "parameterTypes": []
+        },
+        {
+          "name": "getValue",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "net.ideahut.admin.central.object.Forward",
       "allDeclaredFields": true,
       "methods": [
@@ -3999,16 +4003,10 @@
       "type": "net.ideahut.admin.central.service.AccountServiceImpl"
     },
     {
-      "type": "net.ideahut.admin.central.service.AdminHelper"
-    },
-    {
       "type": "net.ideahut.admin.central.service.AdminService"
     },
     {
       "type": "net.ideahut.admin.central.service.AdminServiceImpl"
-    },
-    {
-      "type": "net.ideahut.admin.central.service.AdminServiceImpl$6"
     },
     {
       "type": "net.ideahut.admin.central.service.GridService"
@@ -6129,9 +6127,6 @@
       "type": "net.ideahut.springboot.helper.ErrorHelper"
     },
     {
-      "type": "net.ideahut.springboot.helper.ObjectHelper"
-    },
-    {
       "type": "net.ideahut.springboot.init.InitEnum",
       "allDeclaredFields": true
     },
@@ -6359,9 +6354,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "net.ideahut.springboot.object.ImageScalr"
     },
     {
       "type": "net.ideahut.springboot.object.KeyValue",
@@ -7787,30 +7779,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "okhttp3.internal.cache.CacheInterceptor"
-    },
-    {
-      "type": "okhttp3.internal.connection.ConnectInterceptor"
-    },
-    {
-      "type": "okhttp3.internal.connection.ExchangeFinder"
-    },
-    {
-      "type": "okhttp3.internal.connection.RealCall"
-    },
-    {
-      "type": "okhttp3.internal.connection.RealConnection"
-    },
-    {
-      "type": "okhttp3.internal.http.BridgeInterceptor"
-    },
-    {
-      "type": "okhttp3.internal.http.RealInterceptorChain"
-    },
-    {
-      "type": "okhttp3.internal.http.RetryAndFollowUpInterceptor"
     },
     {
       "type": "org.apache.catalina.authenticator.AuthenticatorBase"
@@ -10921,9 +10889,6 @@
       "type": "org.springframework.util.AntPathMatcher"
     },
     {
-      "type": "org.springframework.util.Assert"
-    },
-    {
       "type": "org.springframework.util.CustomizableThreadCreator"
     },
     {
@@ -11306,24 +11271,6 @@
       ]
     },
     {
-      "type": "sun.security.provider.DSA$SHA224withDSA",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "sun.security.provider.DSA$SHA256withDSA",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
       "type": "sun.security.provider.MD5",
       "methods": [
         {
@@ -11353,34 +11300,7 @@
       ]
     },
     {
-      "type": "sun.security.provider.SHA2$SHA224",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
       "type": "sun.security.provider.SHA2$SHA256",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "sun.security.provider.SHA5$SHA384",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "sun.security.provider.SHA5$SHA512",
       "methods": [
         {
           "name": "<init>",
@@ -11398,15 +11318,6 @@
       ]
     },
     {
-      "type": "sun.security.rsa.PSSParameters",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
       "type": "sun.security.rsa.RSAKeyFactory$Legacy",
       "methods": [
         {
@@ -11416,33 +11327,6 @@
       ]
     },
     {
-      "type": "sun.security.rsa.RSAPSSSignature",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "sun.security.rsa.RSASignature$SHA224withRSA",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "sun.security.ssl.Alert"
-    },
-    {
-      "type": "sun.security.ssl.CertificateMessage$T13CertificateConsumer"
-    },
-    {
-      "type": "sun.security.ssl.HandshakeContext"
-    },
-    {
       "type": "sun.security.ssl.SSLContextImpl$TLSContext",
       "methods": [
         {
@@ -11450,18 +11334,6 @@
           "parameterTypes": []
         }
       ]
-    },
-    {
-      "type": "sun.security.ssl.SSLHandshake"
-    },
-    {
-      "type": "sun.security.ssl.SSLSocketImpl"
-    },
-    {
-      "type": "sun.security.ssl.SSLTransport"
-    },
-    {
-      "type": "sun.security.ssl.TransportContext"
     },
     {
       "type": "sun.security.ssl.TrustManagerFactoryImpl$PKIXFactory",
@@ -11605,16 +11477,7 @@
       ]
     },
     {
-      "type": "sun.security.x509.X509CertImpl"
-    },
-    {
-      "type": "sun.security.x509.X509CertInfo"
-    },
-    {
       "type": "void"
-    },
-    {
-      "type": "xxx"
     },
     {
       "type": {
@@ -11916,9 +11779,6 @@
     },
     {
       "glob": "META-INF/services/javax.imageio.spi.ImageWriterSpi"
-    },
-    {
-      "glob": "META-INF/services/javax.xml.parsers.SAXParserFactory"
     },
     {
       "glob": "META-INF/services/javax.xml.stream.XMLEventFactory"
@@ -12302,10 +12162,6 @@
     {
       "module": "java.desktop",
       "glob": "sun/awt/resources/awtosx_en_ID.properties"
-    },
-    {
-      "module": "java.xml",
-      "glob": "jdk/xml/internal/jdkcatalog/JDKCatalog.xml"
     },
     {
       "module": "jdk.jfr",

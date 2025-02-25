@@ -23,11 +23,10 @@ public class AdminRedirect extends RedirectBase {
 		TokenService tokenService = getApplicationContext().getBean(TokenService.class);
 		Account account = Access.get().getAccount();
 		String token = tokenService.create(account.getSecurityUser());
-		Forward forward = new Forward();
-		forward.setAction(url);
-		forward.setMethod("get");
-		forward.setParameter("_token_", token);
-		return forward;
+		return new Forward()
+		.setAction(url)
+		.setMethod("get")
+		.putParameter("_token_", token);
 	}
 
 }

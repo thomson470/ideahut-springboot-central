@@ -121,11 +121,11 @@ class AccessServiceImpl implements AccessService, InitializingBean {
 		ObjectHelper.runIf(
 			!items.isEmpty(), 
 			() -> {
-				Menu home = new Menu();
-				home.setId("home");
-				home.setTitle("Home");
-				home.setLink("/");
-				home.setIcon("home");
+				Menu home = new Menu()
+				.setId("home")
+				.setTitle("Home")
+				.setLink("/")
+				.setIcon("home");
 				menus.add(home);
 				menus.addAll(items);
 			}
@@ -140,44 +140,44 @@ class AccessServiceImpl implements AccessService, InitializingBean {
 		ObjectHelper.runIf(
 			views.containsKey(View.REDIRECT.name()), 
 			() -> {
-				Menu menu = new Menu();
-				menu.setId("redirect");
-				menu.setTitle("Redirect");
-				menu.setIcon("move_up");
-				menu.setLink("/grid?name=redirect");
+				Menu menu = new Menu()
+				.setId("redirect")
+				.setTitle("Redirect")
+				.setIcon("move_up")
+				.setLink("/grid?name=redirect");
 				items.add(menu);
 			}
 		);
 		ObjectHelper.runIf(
 			views.containsKey(View.MODULE.name()),
 			() -> {
-				Menu menu = new Menu();
-				menu.setId("module");
-				menu.setTitle("Module");
-				menu.setIcon("view_module");
-				menu.setLink("/grid?name=module");
+				Menu menu = new Menu()
+				.setId("module")
+				.setTitle("Module")
+				.setIcon("view_module")
+				.setLink("/grid?name=module");
 				items.add(menu);
 			}
 		);
 		ObjectHelper.runIf(
 			views.containsKey(View.PROJECT.name()),
 			() -> {
-				Menu menu = new Menu();
-				menu.setId("project");
-				menu.setTitle("Project");
-				menu.setIcon("app_registration");
-				menu.setLink("/grid?name=project");
+				Menu menu = new Menu()
+				.setId("project")
+				.setTitle("Project")
+				.setIcon("app_registration")
+				.setLink("/grid?name=project");
 				items.add(menu);
 			}
 		);
 		ObjectHelper.runIf(
 			views.containsKey(View.ACCOUNT.name()),
 			() -> {
-				Menu menu = new Menu();
-				menu.setId("account");
-				menu.setTitle("Account");
-				menu.setIcon("manage_accounts");
-				menu.setLink("/grid?name=account");
+				Menu menu = new Menu()
+				.setId("account")
+				.setTitle("Account")
+				.setIcon("manage_accounts")
+				.setLink("/grid?name=account");
 				items.add(menu);
 			}
 		);
@@ -190,22 +190,22 @@ class AccessServiceImpl implements AccessService, InitializingBean {
 		ObjectHelper.runIf(
 			ObjectHelper.isTrue(account.getEnableReload()),
 			() -> {
-				Menu menu = new Menu();
-				menu.setId("reload");
-				menu.setTitle("Reload");
-				menu.setIcon("manage_history");
-				menu.setLink("/reload");
+				Menu menu = new Menu()
+				.setId("reload")
+				.setTitle("Reload")
+				.setIcon("manage_history")
+				.setLink("/reload");
 				items.add(menu);
 			}
 		);
 		ObjectHelper.runIf(
 			ObjectHelper.isTrue(account.getEnableTool()),
 			() -> {
-				Menu menu = new Menu();
-				menu.setId("tool");
-				menu.setTitle("Tool");
-				menu.setIcon("construction");
-				menu.setLink("/tool");
+				Menu menu = new Menu()
+				.setId("tool")
+				.setTitle("Tool")
+				.setIcon("construction")
+				.setLink("/tool");
 				items.add(menu);
 			}
 		);
@@ -213,11 +213,11 @@ class AccessServiceImpl implements AccessService, InitializingBean {
 			ObjectHelper.isTrue(account.getEnableAudit()),
 			() -> {
 				String prefix = "audit";
-				Menu mroot = new Menu();
-				mroot.setId(prefix);
-				mroot.setLink("");
-				mroot.setTitle("Audit");
-				mroot.setIcon("work_history");
+				Menu mroot = new Menu()
+				.setId(prefix)
+				.setLink("")
+				.setTitle("Audit")
+				.setIcon("work_history");
 				String path = Strings.PATH_AUDIT;
 				Menu proot = FrameworkHelper.defaultDataMapper().copy(mroot, Menu.class);
 				mroot.setChildren(new ArrayList<>());
@@ -229,12 +229,12 @@ class AccessServiceImpl implements AccessService, InitializingBean {
 						int j = 1;
 						for (AuditMember member : members.values()) {
 							if (!Void.class.equals(member.getType())) {
-								Menu mchild = new Menu();
-								mchild.setId(prefix + "_" + j);
-								mchild.setLink(path + "?handler=_&manager=_&type=" + member.getType().getName());
-								mchild.setTitle(member.getType().getSimpleName());
-								mchild.setIcon("av_timer");
-								mchild.setParent(proot);
+								Menu mchild = new Menu()
+								.setId(prefix + "_" + j)
+								.setLink(path + "?handler=_&manager=_&type=" + member.getType().getName())
+								.setTitle(member.getType().getSimpleName())
+								.setIcon("av_timer")
+								.setParent(proot);
 								mroot.getChildren().add(mchild);
 								j++;
 							}
